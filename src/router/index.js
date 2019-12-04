@@ -195,6 +195,27 @@ export const constantRouterMap = [
     ]
   },
   {
+    path:'/sys',
+    component: Layout,
+    redirect: '/sys/region',
+    name: 'sys',
+    meta: {title: '系统设置', icon: 'sms'},
+    children: [
+      {
+        path: 'region',
+        name: 'region',
+        component: () => import('@/views/sys/region/index'),
+        meta: {title: '区域设置', icon: 'sms-flash'}
+      },
+      {
+        path: 'department',
+        name: 'department',
+        component: () => import('@/views/sys/department/index'),
+        meta: {title: '部门设置', icon: 'sms-coupon'}
+      }
+    ]
+  }
+  /*{
     path:'/sms',
     component: Layout,
     redirect: '/sms/coupon',
@@ -300,12 +321,12 @@ export const constantRouterMap = [
         hidden:true
       }
     ]
-  },
+  }*/,
   {path: '*', redirect: '/404', hidden: true}
 ]
 
 export default new Router({
-  // mode: 'history', //后端支持可开
+  mode: 'history', //后端支持可开
   scrollBehavior: () => ({y: 0}),
   routes: constantRouterMap
 })
