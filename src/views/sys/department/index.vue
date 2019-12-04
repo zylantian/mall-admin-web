@@ -46,8 +46,16 @@
         <el-form-item v-if="form.pid !== 0" label="状态" prop="enabled">
           <el-radio v-for="item in dict.dept_status" :key="item.id" v-model="form.enabled" :label="item.value">{{ item.label }}</el-radio>
         </el-form-item>
-        <el-form-item v-if="form.pid !== 0" style="margin-bottom: 0px;" label="上级部门" prop="pid">
+        <el-form-item v-if="form.pid !== 0"  label="上级部门" prop="pid">
           <treeselect v-model="form.pid" :options="depts" style="width: 370px;" placeholder="选择上级类目" />
+        </el-form-item>
+        <el-form-item label="类型" >
+          <el-radio  v-model="form.type" :label="0">内部部门</el-radio>
+          <el-radio  v-model="form.type" :label="1">分公司</el-radio>
+          <el-radio  v-model="form.type" :label="2">经销商</el-radio>
+        </el-form-item>
+        <el-form-item v-if="form.type != 0"  label="区域" >
+          <v-region @values="regionChange" v-model="form.region"></v-region>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -76,10 +84,9 @@
       </el-table-column>
       <el-table-column  v-if="checkPermission(['admin','dept:edit','dept:del'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="['admin','dept:edit']" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
+          <el-button  size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
           <el-popover
             :ref="scope.row.id"
-            v-permission="['admin','dept:del']"
             placement="top"
             width="180"
           >
@@ -111,7 +118,7 @@
         title: '部门',
         crudMethod: { ...crudDept },
         depts: [],
-        form: { id: null, name: null, pid: 1, enabled: 'true' },
+        form: { id: null, name: null, pid: 1, enabled: 'true', type: 0, region: { province: '430000', city: '430400', area: '430408', town: ''}, regionText: {} },
         rules: {
           name: [
             { required: true, message: '请输入名称', trigger: 'blur' }
@@ -174,8 +181,11 @@
       // 获取所有部门
       getDepts() {
         this.crudMethod.getDepts({ enabled: true }).then(res => {
-          this.depts = res.content
+          this.depts = res.data.content
         })
+      },
+      regionChange (data) {
+        this.form.regionText = data
       }
     }
   }

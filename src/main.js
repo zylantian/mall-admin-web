@@ -13,6 +13,8 @@ import App from './App'
 import router from './router'
 import store from './store'
 import dict from './components/Dict'
+import vRegion from 'v-region'
+
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -21,6 +23,7 @@ import '@/permission' // permission control
 Vue.use(ElementUI, { locale })
 Vue.use(VCharts)
 Vue.use(dict)
+Vue.use(vRegion)
 
 Vue.config.productionTip = false
 
