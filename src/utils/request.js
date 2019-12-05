@@ -30,7 +30,7 @@ service.interceptors.response.use(
     const res = response.data
     /*console.log(res)
     console.log('end')*/
-    if (res.code !== 200) {
+    if (res.code  !== undefined && res.code !== 200) {
       Message({
         message: res.message,
         type: 'error',

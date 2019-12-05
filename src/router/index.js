@@ -199,7 +199,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/sys/region',
     name: 'sys',
-    meta: {title: '系统设置', icon: 'sms'},
+    meta: {title: '系统设置', icon: 'system'},
     children: [
       {
         path: 'region',
@@ -211,7 +211,13 @@ export const constantRouterMap = [
         path: 'department',
         name: 'department',
         component: () => import('@/views/sys/department/index'),
-        meta: {title: '部门设置', icon: 'sms-coupon'}
+        meta: {title: '部门设置', icon: 'dept'}
+      },
+      {
+        path: 'role',
+        name: 'role',
+        component: () => import('@/views/sys/role/index'),
+        meta: {title: '角色设置', icon: 'role'}
       }
     ]
   }

@@ -18,6 +18,12 @@
       <el-select v-model="query.enabled" clearable size="small" placeholder="状态" class="filter-item" style="width: 90px" @change="toQuery">
         <el-option v-for="item in enabledTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
       </el-select>
+      <el-select v-model="query.type" clearable size="small" placeholder="类型" class="filter-item" style="width: 180px" @change="toQuery">
+        <el-option  :value="-1" label="总公司"/>
+        <el-option  :value="0" label="内部部门"/>
+        <el-option  :value="1" label="分公司"/>
+        <el-option  :value="2" label="经销商"/>
+      </el-select>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
       <el-button
@@ -66,6 +72,16 @@
     <!--表格渲染-->
     <el-table :loading="loading" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" default-expand-all :data="data" row-key="id" size="small">
       <el-table-column label="名称" prop="name" />
+      <el-table-column label="类型" prop="type" >
+        <template slot-scope="scope">
+          <div >
+            <span v-if="scope.row.type == -1" >总公司</span>
+            <span v-if="scope.row.type == 0" >内部部门</span>
+            <span v-if="scope.row.type == 1" >分公司</span>
+            <span v-if="scope.row.type == 2" >经销商</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
           <el-switch
