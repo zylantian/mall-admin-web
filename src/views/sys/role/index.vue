@@ -35,16 +35,13 @@
       >导出</el-button>
     </div>
     <!-- 表单渲染 -->
-    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="520px">
-      <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
+    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="600px">
+      <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="95px">
         <el-form-item label="角色名称" prop="name">
-          <el-input v-model="form.name" style="width: 145px;" />
-        </el-form-item>
-        <el-form-item label="角色权限" prop="permission">
-          <el-input v-model="form.permission" style="width: 145px;" />
+          <el-input v-model="form.name" style="width: 130px;" />
         </el-form-item>
         <el-form-item label="数据范围" prop="dataScope">
-          <el-select v-model="form.dataScope" style="width: 145px" placeholder="请选择数据范围" @change="changeScope">
+          <el-select v-model="form.dataScope" style="width: 130px" placeholder="请选择范围" @change="changeScope">
             <el-option
               v-for="item in dateScopes"
               :key="item"
@@ -52,12 +49,6 @@
               :value="item"
             />
           </el-select>
-        </el-form-item>
-        <el-form-item label="角色级别" prop="level">
-          <el-input-number v-model.number="form.level" :min="1" controls-position="right" style="width: 145px;" />
-        </el-form-item>
-        <el-form-item v-if="form.dataScope === '自定义'" label="数据权限" prop="depts">
-          <treeselect v-model="form.depts" :options="depts" multiple style="width: 380px" placeholder="请选择" />
         </el-form-item>
         <el-form-item label="描述信息" prop="remark">
           <el-input v-model="form.remark" style="width: 380px;" rows="5" type="textarea" />
@@ -78,8 +69,6 @@
           <el-table v-loading="loading" :data="data" highlight-current-row style="width: 100%;" @current-change="handleCurrentChange">
             <el-table-column prop="name" label="名称" />
             <el-table-column prop="dataScope" label="数据权限" />
-            <el-table-column prop="permission" label="角色权限" />
-            <el-table-column prop="level" label="角色级别" />
             <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述" />
             <el-table-column :show-overflow-tooltip="true" width="135px" prop="createTime" label="创建日期">
               <template slot-scope="scope">
@@ -166,7 +155,7 @@ export default {
         label: 'label'
       },
       title: '角色',
-      dateScopes: ['全部', '本级', '自定义'],
+      dateScopes: ['全部', '本级'],
       crudMethod: { ...crudRoles },
       currentId: 0, menuLoading: false, showButton: false,
       menus: [], menuIds: [], depts: [],
@@ -174,9 +163,6 @@ export default {
       rules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
-        ],
-        permission: [
-          { required: true, message: '请输入权限', trigger: 'blur' }
         ]
       }
     }
@@ -229,7 +215,7 @@ export default {
     // 获取所有菜单
     getMenus() {
       getMenusTree().then(res => {
-        this.menus = res
+        this.menus = res.data
       })
     },
     // 触发单选

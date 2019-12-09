@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/login'
+import { login, getInfo, logout } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -6,7 +6,10 @@ const user = {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    user: {},
+    roles: [],
+    // 第一次加载菜单时用到
+    loadMenus: false
   },
 
   mutations: {
@@ -19,8 +22,14 @@ const user = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
+    SET_USER: (state, user) => {
+      state.user = user
+    },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_LOAD_MENUS: (state, loadMenus) => {
+      state.loadMenus = loadMenus
     }
   },
 
@@ -28,12 +37,18 @@ const user = {
     // 登录
     Login({ commit }, userInfo) {
       const username = userInfo.username.trim()
+      // const rememberMe = userInfo.rememberMe
       return new Promise((resolve, reject) => {
-        login(username, userInfo.password).then(response => {
+        login(userInfo.username, userInfo.password).then(response => {
+          // setToken(res.token, rememberMe)
+          // commit('SET_TOKEN', res.token)
           const data = response.data
           const tokenStr = data.tokenHead+data.token
           setToken(tokenStr)
           commit('SET_TOKEN', tokenStr)
+          // setUserInfo(res.user, commit)
+          // 第一次加载菜单时用到， 具体见 src 目录下的 permission.js
+          commit('SET_LOAD_MENUS', true)
           resolve()
         }).catch(error => {
           reject(error)
@@ -59,7 +74,6 @@ const user = {
         })
       })
     },
-
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
@@ -81,8 +95,30 @@ const user = {
         removeToken()
         resolve()
       })
+    },
+
+    updateLoadMenus({ commit }) {
+      return new Promise((resolve, reject) => {
+        commit('SET_LOAD_MENUS', false)
+      })
     }
   }
+}
+
+export const logOut = (commit) => {
+  commit('SET_TOKEN', '')
+  commit('SET_ROLES', [])
+  removeToken()
+}
+
+export const setUserInfo = (res, commit) => {
+  // 如果没有任何权限，则赋予一个默认的权限，避免请求死循环
+  if (res.roles.length === 0) {
+    commit('SET_ROLES', ['ROLE_SYSTEM_DEFAULT'])
+  } else {
+    commit('SET_ROLES', res.roles)
+  }
+  commit('SET_USER', res)
 }
 
 export default user

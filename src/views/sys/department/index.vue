@@ -116,6 +116,14 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      :total="total"
+      :current-page="page + 1"
+      style="position:relative;display:flex;justify-content:center;align-items:center;margin-top:.5rem;margin-bottom:.25rem;padding-left:0;list-style:none"
+      layout="total, prev, pager, next, sizes"
+      @size-change="sizeChange"
+      @current-change="pageChange"
+    />
   </div>
 </template>
 <script>

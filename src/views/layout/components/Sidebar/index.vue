@@ -9,28 +9,43 @@
       text-color="#bfcbd9"
       active-text-color="#409EFF"
     >
-      <sidebar-item :routes="routes"></sidebar-item>
-    </el-menu>
+        <sidebar-item v-for="route in permission_routers" :key="route.path" :item="route" :base-path="route.path" />
+      </el-menu>
   </scroll-bar>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import SidebarItem from './SidebarItem'
-import ScrollBar from '@/components/ScrollBar'
+  import { mapGetters } from 'vuex'
+  import Logo from './Logo'
+  import SidebarItem from './SidebarItem'
+  import variables from '@/assets/styles/variables.scss'
+  import ScrollBar from '@/components/ScrollBar'
 
-export default {
-  components: { SidebarItem, ScrollBar },
-  computed: {
-    ...mapGetters([
-      'sidebar'
-    ]),
-    routes() {
-      return this.$router.options.routes
-    },
-    isCollapse() {
-      return !this.sidebar.opened
+  export default {
+    components: { SidebarItem, Logo, ScrollBar },
+    computed: {
+      ...mapGetters([
+        'permission_routers',
+        'sidebar'
+      ]),
+      activeMenu() {
+        const route = this.$route
+        const { meta, path } = route
+        // if set path, the sidebar will highlight the path you set
+        if (meta.activeMenu) {
+          return meta.activeMenu
+        }
+        return path
+      },
+      showLogo() {
+        return true
+      },
+      variables() {
+        return variables
+      },
+      isCollapse() {
+        return !this.sidebar.opened
+      }
     }
   }
-}
 </script>

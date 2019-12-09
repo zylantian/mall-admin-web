@@ -44,6 +44,13 @@ export function updatePass(user) {
   })
 }
 
+export function resetPass(id) {
+  return request({
+    url: 'api/users/resetPass/' + id,
+    method: 'post'
+  })
+}
+
 export function updateEmail(form) {
   const data = {
     password: encrypt(form.pass),

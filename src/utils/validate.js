@@ -1,6 +1,10 @@
 export function isvalidUsername(str) {
-  const valid_map = ['admin', 'test']
-  return valid_map.indexOf(str.trim()) >= 0
+  // const valid_map = ['admin', 'test']
+  return /^[A-Za-z]+$/.test(str)
+}
+
+export function isExternal(path) {
+  return /^(https?:|mailto:|tel:)/.test(path)
 }
 
 /* 合法uri*/
@@ -25,5 +29,19 @@ export function validateUpperCase(str) {
 export function validatAlphabets(str) {
   const reg = /^[A-Za-z]+$/
   return reg.test(str)
+}
+
+/**
+ * @param {string} email
+ * @returns {Boolean}
+ */
+export function validEmail(email) {
+  const reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return reg.test(email)
+}
+
+export function isvalidPhone(phone) {
+  const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
+  return reg.test(phone)
 }
 

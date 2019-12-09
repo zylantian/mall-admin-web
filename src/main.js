@@ -10,14 +10,14 @@ import VCharts from 'v-charts'
 import '@/styles/index.scss' // global css
 
 import App from './App'
-import router from './router'
+import router from './router/routers'
 import store from './store'
 import dict from './components/Dict'
 import vRegion from 'v-region'
+import './router/index' // permission control
 
 
 import '@/icons' // icon
-import '@/permission' // permission control
 
 
 Vue.use(ElementUI, { locale })
