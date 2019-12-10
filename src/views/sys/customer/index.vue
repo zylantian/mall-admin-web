@@ -1,19 +1,9 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="50">
-      <!--侧边部门数据-->
-      <el-col :xs="9" :sm="6" :md="4" :lg="4" :xl="4">
-        <div class="head-container">
-          <el-input v-model="deptName" clearable size="small" placeholder="输入部门名称搜索" prefix-icon="el-icon-search" class="filter-item" @input="getDeptDatas" />
-        </div>
-        <el-tree :data="deptDatas" :props="defaultProps" :expand-on-click-node="false" default-expand-all @node-click="handleNodeClick" />
-      </el-col>
-      <!--用户数据-->
-      <el-col :xs="15" :sm="18" :md="20" :lg="20" :xl="20">
         <!--工具栏-->
         <div class="head-container">
           <!-- 搜索 -->
-          <el-input v-model="query.blurry" clearable size="small" placeholder="输入名称或者邮箱搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
+          <el-input v-model="query.blurry" clearable size="small" placeholder="输入名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
           <el-date-picker
             v-model="query.createTime"
             :default-time="['00:00:00','23:59:59']"
@@ -50,40 +40,32 @@
         <!--表单渲染-->
         <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="670px">
           <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
-            <el-form-item label="用户名" prop="username">
-              <el-input v-model="form.username" />
-            </el-form-item>
-            <el-form-item label="电话" prop="phone">
-              <el-input v-model.number="form.phone" />
+            <el-form-item label="姓名" prop="name">
+              <el-input v-model="form.name" />
             </el-form-item>
             <el-form-item v-if="isAdd" label="密码" prop="password">
               <el-input type="password" v-model="form.password" />
             </el-form-item>
-            <el-form-item label="昵称" prop="nickName">
-              <el-input v-model="form.nickName" />
+            <el-form-item label="电话" prop="phone">
+              <el-input v-model.number="form.phone" />
             </el-form-item>
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" />
+            <el-form-item  label="身份证" prop="identityCard">
+              <el-input v-model="form.identityCard" />
             </el-form-item>
-            <el-form-item label="部门" prop="dept.id">
-              <treeselect v-model="form.dept.id" :options="depts" style="width: 178px" placeholder="选择部门" @select="selectFun" />
+            <el-form-item label="会员等级" prop="roles">
+              <el-select v-model="form.memberLevel.id" style="width: 437px" placeholder="请选择">
+                <el-option
+                  v-for="item in levels"
+                  :key="item.name"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
                 <el-radio v-for="item in dict.user_status" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
               </el-radio-group>
-            </el-form-item>
-            <el-form-item style="margin-bottom: 0;" label="角色" prop="roles">
-              <el-select v-model="form.roles" style="width: 437px" placeholder="请选择">
-                <el-option
-                  v-for="item in roles"
-                  :key="item.name"
-                  :disabled="level !== 1 && item.level <= level"
-                  :label="item.name"
-                  :value="item.id"
-
-                />
-              </el-select>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -93,21 +75,20 @@
         </el-dialog>
         <!--表格渲染-->
         <el-table v-loading="loading" :data="data" style="width: 100%;">
-          <el-table-column :show-overflow-tooltip="true" prop="username" label="用户名" />
-          <el-table-column :show-overflow-tooltip="true" prop="nickName" label="昵称" />
-          <el-table-column :show-overflow-tooltip="true" prop="phone" width="120" label="电话" />
-          <el-table-column :show-overflow-tooltip="true" width="135" prop="email" label="邮箱" />
-          <el-table-column :show-overflow-tooltip="true" width="120" label="角色">
+          <el-table-column :show-overflow-tooltip="true" prop="name" style="width: 15%;" label="姓名" />
+          <el-table-column :show-overflow-tooltip="true" prop="phone" style="width: 15%;" label="电话" />
+          <el-table-column :show-overflow-tooltip="true" prop="identityCard" style="width: 20%;" label="身份证" />
+          <el-table-column :show-overflow-tooltip="true" style="width: 8%;" label="会员等级">
             <template slot-scope="scope">
-              <div>{{ scope.row.roles[0].name }} </div>
+              <div>{{ scope.row.memberLevel.name }} </div>
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="120" label="部门">
+          <el-table-column :show-overflow-tooltip="true" style="width: 12%;" label="所属组织">
             <template slot-scope="scope">
               <div>{{ scope.row.dept.name }} </div>
             </template>
           </el-table-column>
-          <el-table-column label="状态" align="center">
+          <el-table-column label="状态" width="80" align="center">
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.status"
@@ -117,22 +98,22 @@
               />
             </template>
           </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="createTime" width="150" label="创建日期">
+          <el-table-column :show-overflow-tooltip="true" prop="createTime" style="width: 15%;" label="创建日期">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="checkPermission(['admin','user:edit','user:del'])" label="操作" width="180" align="center" fixed="right">
+          <el-table-column v-if="checkPermission(['admin','customer:edit','customer:del'])" label="操作" style="width: 15%;" align="center" fixed="right">
             <template slot-scope="scope">
               <el-button size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
               <el-popover
-                :ref="scope.row.username"
+                :ref="scope.row.name"
                 placement="top"
                 width="180"
               >
                 <p>确定重置密码吗？</p>
                 <div style="text-align: right; margin: 0">
-                  <el-button size="mini" type="text" @click="$refs[scope.row.username].doClose()">取消</el-button>
+                  <el-button size="mini" type="text" @click="$refs[scope.row.name].doClose()">取消</el-button>
                   <el-button  type="primary" size="mini" @click="resetpsd(scope.row.id)">确定</el-button>
                 </div>
                 <el-button slot="reference" type="primary" icon="el-icon-lock" size="mini" />
@@ -161,24 +142,19 @@
           @size-change="sizeChange"
           @current-change="pageChange"
         />
-      </el-col>
-    </el-row>
   </div>
 </template>
 
 <script>
 import crud from '@/mixins/crud'
-import crudUser from '@/api/system/user'
-import { resetPass } from '@/api/system/user'
+import crudCustomer from '@/api/system/customer'
+import { resetPass } from '@/api/system/customer'
 import { isvalidPhone } from '@/utils/validate'
 import { isvalidUsername } from '@/utils/validate'
-import { getDepts } from '@/api/system/dept'
-import { getAll, getLevel } from '@/api/system/role'
-import Treeselect from '@riophae/vue-treeselect'
-import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import {isValidIndentityCard} from '@/utils/validate'
+import { getAll } from '@/api/system/umsMemberLevel'
 export default {
-  name: 'User',
-  components: { Treeselect },
+  name: 'Customer',
   mixins: [crud],
   // 数据字典
   dicts: ['user_status'],
@@ -202,36 +178,43 @@ export default {
         callback()
       }
     }
+    const validIndentityCard = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入身份证号码'))
+      } else if (!isValidIndentityCard(value)) {
+        callback(new Error('请输入正确的身份证号码'))
+      } else {
+        callback()
+      }
+    }
     return {
       crudMethod: {
-        ...crudUser
+        ...crudCustomer
       },
-      title: '用户',
+      title: '客户',
       height: document.documentElement.clientHeight - 180 + 'px;',
-      deptName: '', depts: [], deptDatas: [], jobs: [], level: 1, roles: [],
+      levels: [],
       defaultProps: { children: 'children', label: 'name' },
       enabledTypeOptions: [
         { key: 'true', display_name: '激活' },
         { key: 'false', display_name: '锁定' }
       ],
-      form: { username: null, nickName: null, password: '123456', email: null, status: 'true', roles: [], dept: { id: null }, phone: null },
+      form: { name: null, password: '123456', phone: null,  identityCard: null, memberLevel: {id: null}, status: 'true' },
       rules: {
-        username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' , validator: validUsername}
+        name: [
+          { required: true, message: '请输入正确的用户名', trigger: 'blur' , validator: validUsername}
         ],
         email: [
-          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
-        ],
+          { required: true, message: '请输入正确的身份证号码', trigger: 'blur' , validator: validIndentityCard }
+          ],
         phone: [
-          { required: true, trigger: 'blur', validator: validPhone }
+          { required: true, message: '请输入正确的手机号码', trigger: 'blur', validator: validPhone }
         ]
       }
     }
   },
   created() {
     this.$nextTick(() => {
-      this.getDeptDatas()
       this.init()
     })
   },
@@ -243,78 +226,33 @@ export default {
   },
   methods: {
     beforeInit() {
-      this.url = 'api/users'
+      this.url = 'api/customer'
       return true
     },
     // 打开新增弹窗前做的操作
     beforeShowAddForm() {
-      this.getDepts()
-      this.getRoles()
-      this.getRoleLevel()
+      this.getMemberLevel()
     },
     // 打开编辑弹窗前做的操作
     beforeShowEditForm(data) {
-      this.getDepts()
-      this.getRoles()
-      this.getRoleLevel()
-      // this.getJobs(this.form.dept.id)
+      this.getMemberLevel()
       this.form.status = data.status.toString()
-      const roles = []
-      data.roles.forEach(function(role, index) {
-        roles.push(role.id)
-      })
-      this.form.roles = roles
+      this.form.memberLevel.id = data.memberLevel.id
     },
     // 提交前做的操作
     beforeSubmitMethod() {
-      if (!this.form.dept.id) {
+      if (this.form.memberLevel.id === undefined) {
         this.$message({
-          message: '部门不能为空',
-          type: 'warning'
-        })
-        return false
-      } else if (this.form.roles.length === 0) {
-        this.$message({
-          message: '角色不能为空',
+          message: '会员等级不能为空',
           type: 'warning'
         })
         return false
       }
-      const roles = []
-      // this.form.roles.forEach(function(data, index) {
-        const role = { id: this.form.roles }
-        roles.push(role)
-      // })
-      this.form.roles = roles
       return true
-    },
-    // 获取左侧部门数据
-    getDeptDatas() {
-      const sort = 'id,desc'
-      const params = { sort: sort }
-      if (this.deptName) { params['name'] = this.deptName }
-      getDepts(params).then(res => {
-        this.deptDatas = res.data.content
-      })
-    },
-    // 获取弹窗内部门数据
-    getDepts() {
-      getDepts({ enabled: true }).then(res => {
-        this.depts = res.data.content
-      })
-    },
-    // 切换部门
-    handleNodeClick(data) {
-      if (data.pid === 0) {
-        this.query.deptId = null
-      } else {
-        this.query.deptId = data.id
-      }
-      this.init()
     },
     // 改变状态
     changeEnabled(data, val) {
-      this.$confirm('此操作将 "' + this.dict.label.user_status[val] + '" ' + data.username + ', 是否继续？', '提示', {
+      this.$confirm('此操作将 "' + this.dict.label.user_status[val] + '" ' + data.name + ', 是否继续？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -329,25 +267,9 @@ export default {
       })
     },
     // 获取弹窗内角色数据
-    getRoles() {
+    getMemberLevel() {
       getAll().then(res => {
-        this.roles = res.data
-      }).catch(() => {})
-    },
-    // 获取弹窗内岗位数据
-    /*getJobs(id) {
-      getAllJob(id).then(res => {
-        this.jobs = res.content
-      }).catch(() => {})
-    },*/
-    // 点击部门搜索对应的岗位
-    selectFun(node, instanceId) {
-      // this.getJobs(node.id)
-    },
-    // 获取权限级别
-    getRoleLevel() {
-      getLevel().then(res => {
-        this.level = res.data.level
+        this.levels = res.data
       }).catch(() => {})
     },
     addSuccessNotify() {

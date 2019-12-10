@@ -122,6 +122,13 @@ export default {
         duration: 2500
       })
     },
+    addFailNotify() {
+      this.$notify({
+        title: '请勿重复添加',
+        type: 'warning',
+        duration: 2500
+      })
+    },
     editSuccessNotify() {
       this.$notify({
         title: '编辑成功',
@@ -248,6 +255,7 @@ export default {
         this.cancel()
         this.init()
       }).catch(() => {
+        this.addFailNotify()
         this.loading = false
       })
     },

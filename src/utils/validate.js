@@ -45,3 +45,8 @@ export function isvalidPhone(phone) {
   return reg.test(phone)
 }
 
+export function  isValidIndentityCard(card) {
+  const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+  return reg.test(card)
+}
+
