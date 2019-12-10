@@ -63,6 +63,9 @@
         <el-form-item v-if="form.type != 0"  label="区域" >
           <v-region @values="regionChange" v-model="form.region"></v-region>
         </el-form-item>
+        <el-form-item v-if="form.type != 0"  label="账期" >
+          <el-input v-model="form.accountPeriod" style="width: 370px;" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="cancel">取消</el-button>
@@ -79,6 +82,20 @@
             <span v-if="scope.row.type == 0" >内部部门</span>
             <span v-if="scope.row.type == 1" >分公司</span>
             <span v-if="scope.row.type == 2" >经销商</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="所在区域">
+        <template slot-scope="scope">
+          <div >
+            <span v-if="scope.row.provinceValue != undefined" >{{scope.row.provinceValue}} - {{scope.row.cityValue}} - {{scope.row.areaValue}}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="账期">
+        <template slot-scope="scope">
+          <div >
+            <span v-if="scope.row.accountPeriod != undefined" >{{scope.row.accountPeriod}} 天</span>
           </div>
         </template>
       </el-table-column>
@@ -142,7 +159,7 @@
         title: '部门',
         crudMethod: { ...crudDept },
         depts: [],
-        form: { id: null, name: null, pid: 1, enabled: 'true', type: 0, region: { province: '430000', city: '430400', area: '430408', town: ''}, regionText: {} },
+        form: { id: null, name: null, pid: 1, enabled: 'true', type: 0, region: { province: '430000', city: '430400', area: '430408', town: ''}, regionText: {}, accountPeriod: 90 },
         rules: {
           name: [
             { required: true, message: '请输入名称', trigger: 'blur' }
