@@ -33,7 +33,7 @@
               :options="productCateOptions">
             </el-cascader>
           </el-form-item>
-          <el-form-item label="商品品牌：">
+         <!-- <el-form-item label="商品品牌：">
             <el-select v-model="listQuery.brandId" placeholder="请选择品牌" clearable>
               <el-option
                 v-for="item in brandOptions"
@@ -42,7 +42,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item>-->
           <el-form-item label="上架状态：">
             <el-select v-model="listQuery.publishStatus" placeholder="全部" clearable>
               <el-option
@@ -53,7 +53,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="审核状态：">
+         <!-- <el-form-item label="审核状态：">
             <el-select v-model="listQuery.verifyStatus" placeholder="全部" clearable>
               <el-option
                 v-for="item in verifyStatusOptions"
@@ -62,7 +62,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item>-->
         </el-form>
       </div>
     </el-card>
@@ -112,7 +112,7 @@
                 v-model="scope.row.publishStatus">
               </el-switch>
             </p>
-            <p>新品：
+            <!--<p>新品：
               <el-switch
                 @change="handleNewStatusChange(scope.$index, scope.row)"
                 :active-value="1"
@@ -127,7 +127,7 @@
                 :inactive-value="0"
                 v-model="scope.row.recommandStatus">
               </el-switch>
-            </p>
+            </p>-->
           </template>
         </el-table-column>
         <el-table-column label="排序" width="100" align="center">
@@ -141,7 +141,7 @@
         <el-table-column label="销量" width="100" align="center">
           <template slot-scope="scope">{{scope.row.sale}}</template>
         </el-table-column>
-        <el-table-column label="审核状态" width="100" align="center">
+        <!--<el-table-column label="审核状态" width="100" align="center">
           <template slot-scope="scope">
             <p>{{scope.row.verifyStatus | verifyStatusFilter}}</p>
             <p>
@@ -151,23 +151,17 @@
               </el-button>
             </p>
           </template>
-        </el-table-column>
+        </el-table-column>-->
         <el-table-column label="操作" width="160" align="center">
           <template slot-scope="scope">
             <p>
-              <el-button
+              <!--<el-button
                 size="mini"
                 @click="handleShowProduct(scope.$index, scope.row)">查看
-              </el-button>
+              </el-button>-->
               <el-button
                 size="mini"
                 @click="handleUpdateProduct(scope.$index, scope.row)">编辑
-              </el-button>
-            </p>
-            <p>
-              <el-button
-                size="mini"
-                @click="handleShowLog(scope.$index, scope.row)">日志
               </el-button>
               <el-button
                 size="mini"
@@ -175,6 +169,13 @@
                 @click="handleDelete(scope.$index, scope.row)">删除
               </el-button>
             </p>
+            <!--<p>-->
+              <!--<el-button
+                size="mini"
+                @click="handleShowLog(scope.$index, scope.row)">日志
+              </el-button>-->
+
+            <!--</p>-->
           </template>
         </el-table-column>
       </el-table>
@@ -315,7 +316,7 @@
           {
             label: "商品下架",
             value: "publishOff"
-          },
+          }/*,
           {
             label: "设为推荐",
             value: "recommendOn"
@@ -339,7 +340,7 @@
           {
             label: "移入回收站",
             value: "recycle"
-          }
+          }*/
         ],
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
@@ -368,7 +369,7 @@
     },
     created() {
       this.getList();
-      this.getBrandList();
+      // this.getBrandList();
       this.getProductCateList();
     },
     watch: {

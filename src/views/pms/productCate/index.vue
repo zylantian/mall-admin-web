@@ -24,13 +24,13 @@
         <el-table-column label="级别" width="100" align="center">
           <template slot-scope="scope">{{scope.row.level | levelFilter}}</template>
         </el-table-column>
-        <el-table-column label="商品数量" width="100" align="center">
+        <!--<el-table-column label="商品数量" width="100" align="center">
           <template slot-scope="scope">{{scope.row.productCount }}</template>
-        </el-table-column>
+        </el-table-column>-->
         <el-table-column label="数量单位" width="100" align="center">
           <template slot-scope="scope">{{scope.row.productUnit }}</template>
         </el-table-column>
-        <el-table-column label="导航栏" width="100" align="center">
+        <!--<el-table-column label="导航栏" width="100" align="center">
           <template slot-scope="scope">
             <el-switch
               @change="handleNavStatusChange(scope.$index, scope.row)"
@@ -49,7 +49,7 @@
               v-model="scope.row.showStatus">
             </el-switch>
           </template>
-        </el-table-column>
+        </el-table-column>-->
         <el-table-column label="排序" width="100" align="center">
           <template slot-scope="scope">{{scope.row.sort }}</template>
         </el-table-column>
@@ -60,10 +60,10 @@
               :disabled="scope.row.level | disableNextLevel"
               @click="handleShowNextLevel(scope.$index, scope.row)">查看下级
             </el-button>
-            <el-button
+            <!--<el-button
               size="mini"
               @click="handleTransferProduct(scope.$index, scope.row)">转移商品
-            </el-button>
+            </el-button>-->
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
@@ -108,7 +108,7 @@
         listLoading: true,
         listQuery: {
           pageNum: 1,
-          pageSize: 5
+          pageSize: 10
         },
         parentId: 0
       }

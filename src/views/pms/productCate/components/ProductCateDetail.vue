@@ -24,7 +24,7 @@
       <el-form-item label="排序：">
         <el-input v-model="productCate.sort"></el-input>
       </el-form-item>
-      <el-form-item label="是否显示：">
+      <!--<el-form-item label="是否显示：">
         <el-radio-group v-model="productCate.showStatus">
           <el-radio :label="1">是</el-radio>
           <el-radio :label="0">否</el-radio>
@@ -35,11 +35,11 @@
           <el-radio :label="1">是</el-radio>
           <el-radio :label="0">否</el-radio>
         </el-radio-group>
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="分类图标：">
         <single-upload v-model="productCate.icon"></single-upload>
       </el-form-item>
-      <el-form-item v-for="(filterProductAttr, index) in filterProductAttrList"
+      <!--<el-form-item v-for="(filterProductAttr, index) in filterProductAttrList"
                     :label="index | filterLabelFilter"
                     :key="filterProductAttr.key"
       >
@@ -52,10 +52,10 @@
       </el-form-item>
       <el-form-item>
         <el-button size="small" type="primary" @click="handleAddFilterAttr()">新增</el-button>
-      </el-form-item>
-      <el-form-item label="关键词：">
+      </el-form-item>-->
+      <!--<el-form-item label="关键词：">
         <el-input v-model="productCate.keywords"></el-input>
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="分类描述：">
         <el-input type="textarea" :autosize="true" v-model="productCate.description"></el-input>
       </el-form-item>
@@ -184,7 +184,7 @@
                     type: 'success',
                     duration: 1000
                   });
-                  this.$router.back();
+                  this.$router.push({path:'/pms/productCate'});
                 });
               } else {
                 this.productCate.productAttributeIdList = this.getProductAttributeIdList();
@@ -196,6 +196,7 @@
                     type: 'success',
                     duration: 1000
                   });
+                  this.$router.push({path:'/pms/productCate'});
                 });
               }
             });

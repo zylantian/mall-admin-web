@@ -141,7 +141,8 @@
       </el-form-item>
       <el-form-item style="text-align: center">
         <el-button size="medium" @click="handlePrev">上一步，填写商品促销</el-button>
-        <el-button type="primary" size="medium" @click="handleNext">下一步，选择商品关联</el-button>
+        <!--<el-button type="primary" size="medium" @click="handleNext">下一步，选择商品关联</el-button>-->
+        <el-button type="primary" size="medium" @click="handleFinishCommit">完成，提交商品</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -561,6 +562,9 @@
         this.mergeProductAttrValue();
         this.mergeProductAttrPics();
         this.$emit('nextStep')
+      },
+      handleFinishCommit(){
+        this.$emit('finishCommit',this.isEdit);
       }
     }
   }

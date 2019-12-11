@@ -129,7 +129,6 @@
             check-strictly
             accordion
             show-checkbox
-            default-expand-all="true"
             node-key="id"
           />
         </el-card>
