@@ -23,6 +23,7 @@
         <el-option  :value="0" label="内部部门"/>
         <el-option  :value="1" label="分公司"/>
         <el-option  :value="2" label="经销商"/>
+        <el-option  :value="3" label="分仓"/>
       </el-select>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
       <!-- 新增 -->
@@ -59,6 +60,7 @@
           <el-radio  v-model="form.type" :label="0">内部部门</el-radio>
           <el-radio  v-model="form.type" :label="1">分公司</el-radio>
           <el-radio  v-model="form.type" :label="2">经销商</el-radio>
+          <el-radio  v-model="form.type" :label="3">分仓</el-radio>
         </el-form-item>
         <el-form-item v-if="form.type != 0"  label="区域" >
           <v-region @values="regionChange" v-model="form.region"></v-region>
@@ -82,6 +84,7 @@
             <span v-if="scope.row.type == 0" >内部部门</span>
             <span v-if="scope.row.type == 1" >分公司</span>
             <span v-if="scope.row.type == 2" >经销商</span>
+            <span v-if="scope.row.type == 3" >分仓</span>
           </div>
         </template>
       </el-table-column>

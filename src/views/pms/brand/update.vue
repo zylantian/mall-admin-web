@@ -1,4 +1,4 @@
-<template> 
+<template>
   <brand-detail :is-edit='true'></brand-detail>
 </template>
 <script>

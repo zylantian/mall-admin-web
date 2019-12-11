@@ -32,12 +32,13 @@ export const constantRouterMap = [
       meta: {title: '首页', icon: 'home', affix: true, noCache: true}
     }]
   },
-  /*{
+  {
     path: '/pms',
     component: Layout,
     redirect: '/pms/product',
     name: 'pms',
     meta: {title: '商品', icon: 'product'},
+    hidden: true,
     children: [{
       path: 'product',
       name: 'product',
@@ -139,7 +140,7 @@ export const constantRouterMap = [
         hidden: true
       }
     ]
-  },*/
+  },
   {
     path: '/oms',
     component: Layout,
