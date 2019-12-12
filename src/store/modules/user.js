@@ -9,7 +9,8 @@ const user = {
     user: {},
     roles: [],
     // 第一次加载菜单时用到
-    loadMenus: false
+    loadMenus: false,
+    deptType: 2
   },
 
   mutations: {
@@ -30,6 +31,9 @@ const user = {
     },
     SET_LOAD_MENUS: (state, loadMenus) => {
       state.loadMenus = loadMenus
+    },
+    SET_DEPT_TYPE: (state, deptType) => {
+      state.deptType = deptType
     }
   },
 
@@ -66,6 +70,7 @@ const user = {
           } else {
             reject('getInfo: roles must be a non-null array !')
           }
+          commit('SET_DEPT_TYPE', data.deptType)
           commit('SET_NAME', data.username)
           commit('SET_AVATAR', data.icon)
           resolve(response)

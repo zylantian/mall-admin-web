@@ -32,6 +32,7 @@ export default {
         matched = [{ path: '/home', meta: { title: '首页' }}].concat(matched)
       }
       this.levelList = matched
+      console.log(this.levelList)
     }
   }
 }

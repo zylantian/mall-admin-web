@@ -93,7 +93,6 @@
         <el-table-column label="商品名称" align="center">
           <template slot-scope="scope">
             <p>{{scope.row.name}}</p>
-            <p>品牌：{{scope.row.brandName}}</p>
           </template>
         </el-table-column>
         <el-table-column label="价格/货号" width="120" align="center">
@@ -109,7 +108,8 @@
                 @change="handlePublishStatusChange(scope.$index, scope.row)"
                 :active-value="1"
                 :inactive-value="0"
-                v-model="scope.row.publishStatus">
+                v-model="scope.row.publishStatus"
+                :disabled="!hasFirstLevelPermission(scope.row)">
               </el-switch>
             </p>
             <!--<p>新品：
@@ -141,6 +141,9 @@
         <el-table-column label="销量" width="100" align="center">
           <template slot-scope="scope">{{scope.row.sale}}</template>
         </el-table-column>
+        <el-table-column label="所属商户" width="100" align="center">
+          <template slot-scope="scope">{{scope.row.deptName}}</template>
+        </el-table-column>
         <!--<el-table-column label="审核状态" width="100" align="center">
           <template slot-scope="scope">
             <p>{{scope.row.verifyStatus | verifyStatusFilter}}</p>
@@ -163,7 +166,7 @@
                 size="mini"
                 @click="handleUpdateProduct(scope.$index, scope.row)">编辑
               </el-button>
-              <el-button
+              <el-button  v-if="hasFirstLevelPermission(scope.row)"
                 size="mini"
                 type="danger"
                 @click="handleDelete(scope.$index, scope.row)">删除
@@ -508,8 +511,11 @@
         }).then(() => {
           let ids=[];
           for(let i=0;i<this.multipleSelection.length;i++){
-            ids.push(this.multipleSelection[i].id);
+            if (this.hasFirstLevelPermission(this.multipleSelection[i])) {
+              ids.push(this.multipleSelection[i].id);
+            }
           }
+          if (ids.length == 0) return;
           switch (this.operateType) {
             case this.operates[0].value:
               this.updatePublishStatus(1,ids);
@@ -553,6 +559,9 @@
         this.multipleSelection = val;
       },
       handlePublishStatusChange(index, row) {
+        if (!this.hasFirstLevelPermission(row)) {
+          return;
+        }
         let ids = [];
         ids.push(row.id);
         this.updatePublishStatus(row.publishStatus, ids);
@@ -642,6 +651,13 @@
           });
         });
         this.getList();
+      },
+      hasFirstLevelPermission(row) {
+        if (this.$store.state.user.deptType === 4 || this.$store.state.user.deptType === -1) {
+          return true
+        } else {
+          return row.pid != null && row.pid !== undefined
+        }
       }
     }
   }
