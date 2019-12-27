@@ -6,7 +6,9 @@
         <el-step title="支付订单" :description="formatTime(order.paymentTime)"></el-step>
         <el-step title="平台发货" :description="formatTime(order.deliveryTime)"></el-step>
         <el-step title="确认收货" :description="formatTime(order.receiveTime)"></el-step>
+<!--
         <el-step title="完成评价" :description="formatTime(order.commentTime)"></el-step>
+-->
       </el-steps>
     </div>
     <el-card shadow="never" style="margin-top: 15px">
@@ -16,20 +18,20 @@
         <div class="operate-button-container" v-show="order.status===0">
           <el-button size="mini" @click="showUpdateReceiverDialog">修改收货人信息</el-button>
           <el-button size="mini">修改商品信息</el-button>
-          <el-button size="mini" @click="showUpdateMoneyDialog">修改费用信息</el-button>
-          <el-button size="mini" @click="showMessageDialog">发送站内信</el-button>
+          <!--<el-button size="mini" @click="showUpdateMoneyDialog">修改费用信息</el-button>-->
+          <!--<el-button size="mini" @click="showMessageDialog">发送站内信</el-button>-->
           <el-button size="mini" @click="showCloseOrderDialog">关闭订单</el-button>
           <el-button size="mini" @click="showMarkOrderDialog">备注订单</el-button>
         </div>
         <div class="operate-button-container" v-show="order.status===1">
           <el-button size="mini" @click="showUpdateReceiverDialog">修改收货人信息</el-button>
-          <el-button size="mini" @click="showMessageDialog">发送站内信</el-button>
+          <!--<el-button size="mini" @click="showMessageDialog">发送站内信</el-button>-->
           <el-button size="mini">取消订单</el-button>
           <el-button size="mini" @click="showMarkOrderDialog">备注订单</el-button>
         </div>
         <div class="operate-button-container" v-show="order.status===2||order.status===3">
           <el-button size="mini" @click="showLogisticsDialog">订单跟踪</el-button>
-          <el-button size="mini" @click="showMessageDialog">发送站内信</el-button>
+          <!--<el-button size="mini" @click="showMessageDialog">发送站内信</el-button>-->
           <el-button size="mini" @click="showMarkOrderDialog">备注订单</el-button>
         </div>
         <div class="operate-button-container" v-show="order.status===4">
@@ -43,34 +45,36 @@
       </div>
       <div class="table-layout">
         <el-row>
-          <el-col :span="4" class="table-cell-title">订单编号</el-col>
-          <el-col :span="4" class="table-cell-title">发货单流水号</el-col>
-          <el-col :span="4" class="table-cell-title">用户账号</el-col>
-          <el-col :span="4" class="table-cell-title">支付方式</el-col>
-          <el-col :span="4" class="table-cell-title">订单来源</el-col>
-          <el-col :span="4" class="table-cell-title">订单类型</el-col>
+          <el-col :span="6" class="table-cell-title">订单编号</el-col>
+         <!-- <el-col :span="4" class="table-cell-title">发货单流水号</el-col>-->
+          <el-col :span="6" class="table-cell-title">用户账号</el-col>
+          <el-col :span="6" class="table-cell-title">支付方式</el-col>
+          <!--<el-col :span="4" class="table-cell-title">订单来源</el-col>-->
+          <el-col :span="6" class="table-cell-title">订单类型</el-col>
         </el-row>
         <el-row>
-          <el-col :span="4" class="table-cell">{{order.orderSn}}</el-col>
-          <el-col :span="4" class="table-cell">暂无</el-col>
-          <el-col :span="4" class="table-cell">{{order.memberUsername}}</el-col>
-          <el-col :span="4" class="table-cell">{{order.payType | formatPayType}}</el-col>
-          <el-col :span="4" class="table-cell">{{order.sourceType | formatSourceType}}</el-col>
-          <el-col :span="4" class="table-cell">{{order.orderType | formatOrderType}}</el-col>
+          <el-col :span="6" class="table-cell">{{order.orderSn}}</el-col>
+          <!--<el-col :span="4" class="table-cell">暂无</el-col>-->
+          <el-col :span="6" class="table-cell">{{order.memberUsername}}</el-col>
+          <el-col :span="6" class="table-cell">{{order.payType | formatPayType}}</el-col>
+          <!--<el-col :span="4" class="table-cell">{{order.sourceType | formatSourceType}}</el-col>-->
+          <el-col :span="6" class="table-cell">{{order.orderType | formatOrderType}}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="4" class="table-cell-title">配送方式</el-col>
-          <el-col :span="4" class="table-cell-title">物流单号</el-col>
-          <el-col :span="4" class="table-cell-title">自动确认收货时间</el-col>
-          <el-col :span="4" class="table-cell-title">订单可得优币</el-col>
-          <el-col :span="4" class="table-cell-title">订单可得成长值</el-col>
-          <el-col :span="4" class="table-cell-title">活动信息</el-col>
+
+          <el-col :span="6" class="table-cell-title">配送方式</el-col>
+          <el-col :span="6" class="table-cell-title">物流单号</el-col>
+          <el-col :span="6" class="table-cell-title">自动确认收货时间</el-col>
+          <!--<el-col :span="4" class="table-cell-title">订单可得优币</el-col>
+          <el-col :span="4" class="table-cell-title">订单可得成长值</el-col>-->
+          <!--<el-col :span="4" class="table-cell-title">活动信息</el-col>-->
         </el-row>
         <el-row>
-          <el-col :span="4" class="table-cell">{{order.deliveryCompany | formatNull}}</el-col>
-          <el-col :span="4" class="table-cell">{{order.deliverySn | formatNull}}</el-col>
-          <el-col :span="4" class="table-cell">{{order.autoConfirmDay}}天</el-col>
-          <el-col :span="4" class="table-cell">{{order.integration}}</el-col>
+
+          <el-col :span="6" class="table-cell">{{order.deliveryCompany | formatNull}}</el-col>
+          <el-col :span="6" class="table-cell">{{order.deliverySn | formatNull}}</el-col>
+          <el-col :span="6" class="table-cell">{{order.autoConfirmDay}}天</el-col>
+          <!--<el-col :span="4" class="table-cell">{{order.integration}}</el-col>
           <el-col :span="4" class="table-cell">{{order.growth}}</el-col>
           <el-col :span="4" class="table-cell">
             <el-popover
@@ -81,7 +85,7 @@
               :content="order.promotionInfo">
               <span slot="reference">{{order.promotionInfo | formatLongText}}</span>
             </el-popover>
-          </el-col>
+          </el-col>-->
         </el-row>
       </div>
       <div style="margin-top: 20px">
@@ -118,7 +122,7 @@
         <el-table-column label="商品名称" align="center">
           <template slot-scope="scope">
             <p>{{scope.row.productName}}</p>
-            <p>品牌：{{scope.row.productBrand}}</p>
+            <!--<p>品牌：{{scope.row.productBrand}}</p>-->
           </template>
         </el-table-column>
         <el-table-column label="价格/货号" width="120" align="center">
@@ -154,31 +158,32 @@
         <el-row>
           <el-col :span="6" class="table-cell-title">商品合计</el-col>
           <el-col :span="6" class="table-cell-title">运费</el-col>
-          <el-col :span="6" class="table-cell-title">优惠券</el-col>
-          <el-col :span="6" class="table-cell-title">积分抵扣</el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="6" class="table-cell">￥{{order.totalAmount}}</el-col>
-          <el-col :span="6" class="table-cell">￥{{order.freightAmount}}</el-col>
-          <el-col :span="6" class="table-cell">-￥{{order.couponAmount}}</el-col>
-          <el-col :span="6" class="table-cell">-￥{{order.integrationAmount}}</el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="6" class="table-cell-title">活动优惠</el-col>
-          <el-col :span="6" class="table-cell-title">折扣金额</el-col>
           <el-col :span="6" class="table-cell-title">订单总金额</el-col>
           <el-col :span="6" class="table-cell-title">应付款金额</el-col>
         </el-row>
         <el-row>
-          <el-col :span="6" class="table-cell">-￥{{order.promotionAmount}}</el-col>
-          <el-col :span="6" class="table-cell">-￥{{order.discountAmount}}</el-col>
+          <el-col :span="6" class="table-cell">￥{{order.totalAmount}}</el-col>
+          <el-col :span="6" class="table-cell">￥{{order.freightAmount}}</el-col>
           <el-col :span="6" class="table-cell">
             <span class="color-danger">￥{{order.totalAmount+order.freightAmount}}</span>
           </el-col>
           <el-col :span="6" class="table-cell">
-            <span class="color-danger">￥{{order.payAmount+order.freightAmount-order.discountAmount}}</span>
+            <span class="color-danger">￥{{order.payAmount}}</span>
           </el-col>
         </el-row>
+        <!--<el-row>
+          <el-col :span="6" class="table-cell-title">活动优惠</el-col>
+          <el-col :span="6" class="table-cell-title">折扣金额</el-col>
+          <el-col :span="6" class="table-cell-title">优惠券</el-col>
+          <el-col :span="6" class="table-cell-title">积分抵扣</el-col>
+
+        </el-row>
+        <el-row>
+          <el-col :span="6" class="table-cell">-￥{{order.promotionAmount}}</el-col>
+          <el-col :span="6" class="table-cell">-￥{{order.discountAmount}}</el-col>
+          <el-col :span="6" class="table-cell">-￥{{order.couponAmount}}</el-col>
+          <el-col :span="6" class="table-cell">-￥{{order.integrationAmount}}</el-col>
+        </el-row>-->
       </div>
       <div style="margin-top: 20px">
         <svg-icon icon-class="marker" style="color: #606266"></svg-icon>
@@ -343,7 +348,7 @@
         <el-button type="primary" @click="handleMarkOrder">确 定</el-button>
       </span>
     </el-dialog>
-    <logistics-dialog v-model="logisticsDialogVisible"></logistics-dialog>
+    <logistics-dialog v-show="logisticsDialogVisible" v-model="logisticsDialogVisible" :deliverySn.sync="deliverySn"></logistics-dialog>
   </div>
 </template>
 <script>
@@ -379,13 +384,15 @@
         closeInfo:{note:null,id:null},
         markOrderDialogVisible:false,
         markInfo:{note:null},
-        logisticsDialogVisible:false
+        logisticsDialogVisible:false,
+        deliverySn: ''
       }
     },
     created() {
       this.id = this.list = this.$route.query.id;
       getOrderDetail(this.id).then(response => {
         this.order = response.data;
+        this.deliverySn = this.order.deliverySn
       });
     },
     filters: {
@@ -411,7 +418,7 @@
         } else if (value === 2) {
           return '微信';
         } else {
-          return '未支付';
+          return '赊账';
         }
       },
       formatSourceType(value) {

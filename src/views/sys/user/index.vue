@@ -62,9 +62,9 @@
             <el-form-item label="昵称" prop="nickName">
               <el-input v-model="form.nickName" />
             </el-form-item>
-            <el-form-item label="邮箱" prop="email">
+            <!--<el-form-item label="邮箱" prop="email">
               <el-input v-model="form.email" />
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item label="部门" prop="dept.id">
               <treeselect v-model="form.dept.id" :options="depts" style="width: 178px" placeholder="选择部门" @select="selectFun" />
             </el-form-item>
@@ -96,7 +96,7 @@
           <el-table-column :show-overflow-tooltip="true" prop="username" label="用户名" />
           <el-table-column :show-overflow-tooltip="true" prop="nickName" label="昵称" />
           <el-table-column :show-overflow-tooltip="true" prop="phone" width="120" label="电话" />
-          <el-table-column :show-overflow-tooltip="true" width="135" prop="email" label="邮箱" />
+          <!--<el-table-column :show-overflow-tooltip="true" width="135" prop="email" label="邮箱" />-->
           <el-table-column :show-overflow-tooltip="true" width="120" label="角色">
             <template slot-scope="scope">
               <div>{{ scope.row.roles[0].name }} </div>
@@ -219,10 +219,10 @@ export default {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' , validator: validUsername}
         ],
-        email: [
+        /*email: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
-        ],
+        ],*/
         phone: [
           { required: true, trigger: 'blur', validator: validPhone }
         ]

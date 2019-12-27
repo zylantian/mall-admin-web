@@ -19,7 +19,7 @@ export function deleteOrder(params) {
   return request({
     url:'/order/delete',
     method:'post',
-    params:params
+    params: params
   })
 }
 
@@ -59,5 +59,21 @@ export function updateOrderNote(params) {
     url:'/order/update/note',
     method:'post',
     params:params
+  })
+}
+
+export function confirmLoan(params) {
+  return request({
+    url:'/order/confirmLoan',
+    method:'post',
+    params: params
+  })
+}
+
+export function viewLogistics(params) {
+  return request({
+    url:'/order/logistics',
+    method:'get',
+    params: params
   })
 }

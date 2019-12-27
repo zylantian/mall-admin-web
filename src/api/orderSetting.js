@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 export function getOrderSetting(id) {
   return request({
-    url:'/orderSetting/'+id,
+    url:'/orderSetting/SettingByDeptId',
     method:'get',
   })
 }

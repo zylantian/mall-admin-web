@@ -44,7 +44,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="订单分类：">
+         <!-- <el-form-item label="订单分类：">
             <el-select v-model="listQuery.orderType" class="input-width" placeholder="全部" clearable>
               <el-option v-for="item in orderTypeOptions"
                          :key="item.value"
@@ -52,8 +52,8 @@
                          :value="item.value">
               </el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="订单来源：">
+          </el-form-item>-->
+          <!--<el-form-item label="订单来源：">
             <el-select v-model="listQuery.sourceType" class="input-width" placeholder="全部" clearable>
               <el-option v-for="item in sourceTypeOptions"
                          :key="item.value"
@@ -61,7 +61,7 @@
                          :value="item.value">
               </el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item>-->
         </el-form>
       </div>
     </el-card>
@@ -75,32 +75,32 @@
                 style="width: 100%;"
                 @selection-change="handleSelectionChange"
                 v-loading="listLoading" border>
-        <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="编号" width="80" align="center">
+        <el-table-column type="selection" min-width="3%" align="center"></el-table-column>
+        <el-table-column label="编号" min-width="5%" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="订单编号" width="180" align="center">
+        <el-table-column label="订单编号" min-width="17%" align="center">
           <template slot-scope="scope">{{scope.row.orderSn}}</template>
         </el-table-column>
-        <el-table-column label="提交时间" width="180" align="center">
+        <el-table-column label="提交时间" min-width="13%" align="center">
           <template slot-scope="scope">{{scope.row.createTime | formatCreateTime}}</template>
         </el-table-column>
-        <el-table-column label="用户账号" align="center">
+        <el-table-column label="用户账号" min-width="13%">
           <template slot-scope="scope">{{scope.row.memberUsername}}</template>
         </el-table-column>
-        <el-table-column label="订单金额" width="120" align="center">
+        <el-table-column label="订单金额" min-width="10%" align="center">
           <template slot-scope="scope">￥{{scope.row.totalAmount}}</template>
         </el-table-column>
-        <el-table-column label="支付方式" width="120" align="center">
+        <el-table-column label="支付方式" min-width="10%" align="center">
           <template slot-scope="scope">{{scope.row.payType | formatPayType}}</template>
         </el-table-column>
-        <el-table-column label="订单来源" width="120" align="center">
+        <!--<el-table-column label="订单来源" width="120" align="center">
           <template slot-scope="scope">{{scope.row.sourceType | formatSourceType}}</template>
-        </el-table-column>
-        <el-table-column label="订单状态" width="120" align="center">
+        </el-table-column>-->
+        <el-table-column label="订单状态" min-width="10%" align="center">
           <template slot-scope="scope">{{scope.row.status | formatStatus}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="200" align="center">
+        <el-table-column label="操作" min-width="19%" align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -108,12 +108,16 @@
             >查看订单</el-button>
             <el-button
               size="mini"
-              @click="handleCloseOrder(scope.$index, scope.row)"
-              v-show="scope.row.status===0">关闭订单</el-button>
-            <el-button
-              size="mini"
               @click="handleDeliveryOrder(scope.$index, scope.row)"
               v-show="scope.row.status===1">订单发货</el-button>
+            <el-button
+              size="mini"
+              @click="confirmLoanOrder(scope.$index, scope.row)"
+              v-show="scope.row.payType == 3 && scope.row.status == 0">确认赊账</el-button>
+            <el-button
+              size="mini"
+              @click="handleCloseOrder(scope.$index, scope.row)"
+              v-show="scope.row.status===0">关闭订单</el-button>
             <el-button
               size="mini"
               @click="handleViewLogistics(scope.$index, scope.row)"
@@ -175,11 +179,11 @@
         <el-button type="primary" @click="handleCloseOrderConfirm">确 定</el-button>
       </span>
     </el-dialog>
-    <logistics-dialog v-model="logisticsDialogVisible"></logistics-dialog>
+    <logistics-dialog v-model="logisticsDialogVisible" :deliverySn.sync="deliverySn"></logistics-dialog>
   </div>
 </template>
 <script>
-  import {fetchList,closeOrder,deleteOrder} from '@/api/order'
+  import {fetchList, closeOrder, deleteOrder, confirmLoan} from '@/api/order'
   import {formatDate} from '@/utils/date';
   import LogisticsDialog from '@/views/oms/order/components/logisticsDialog';
   const defaultListQuery = {
@@ -264,7 +268,8 @@
             value: 3
           }
         ],
-        logisticsDialogVisible:false
+        logisticsDialogVisible:false,
+        deliverySn: ''
       }
     },
     created() {
@@ -281,7 +286,7 @@
         } else if (value === 2) {
           return '微信';
         } else {
-          return '未支付';
+          return '赊账';
         }
       },
       formatSourceType(value) {
@@ -330,7 +335,17 @@
         this.$router.push({path:'/oms/deliverOrderList',query:{list:[listItem]}})
       },
       handleViewLogistics(index, row){
-        this.logisticsDialogVisible=true;
+        if (row.deliverySn == null) {
+          this.$message({
+            message: '尚未填写物流单号',
+            type: 'warning',
+            duration: 1000
+          });
+          return;
+        } else {
+          this.deliverySn = row.deliverySn
+          this.logisticsDialogVisible=true;
+        }
       },
       handleDeleteOrder(index, row){
         let ids=[];
@@ -430,6 +445,29 @@
           deleteOrder(params).then(response=>{
             this.$message({
               message: '删除成功！',
+              type: 'success',
+              duration: 1000
+            });
+            this.getList();
+          });
+        })
+      },
+      confirmLoanOrder(index, row){
+        let ids=[];
+        ids.push(row.id);
+        this.confirmLoan(ids);
+      },
+      confirmLoan(ids){
+        this.$confirm('是否要同意该操作?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let params = new URLSearchParams();
+          params.append("ids",ids);
+          confirmLoan(params).then(response=>{
+            this.$message({
+              message: '操作成功！',
               type: 'success',
               duration: 1000
             });

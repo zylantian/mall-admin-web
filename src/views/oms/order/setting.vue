@@ -34,7 +34,17 @@
         </el-input>
         <span class="note-margin">自动五星好评</span>
       </el-form-item>
-      <el-form-item>
+        <el-form-item label="订单金额少于：" prop="lessFee">
+          <el-input v-model="orderSetting.lessFee" class="input-width">
+            <template slot="append">元</template>
+          </el-input>
+        </el-form-item>
+      <el-form-item label="加收运费：" prop="freight">
+        <el-input v-model="orderSetting.freight" class="input-width">
+          <template slot="append">元</template>
+        </el-input>
+      </el-form-item>
+        <el-form-item>
         <el-button
           @click="confirm('orderSettingForm')"
           type="primary">提交</el-button>
