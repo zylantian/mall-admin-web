@@ -1,6 +1,6 @@
 <template>
   <div class="detail-container">
-    <el-card shadow="never">
+    <!--<el-card shadow="never">
       <span class="font-title-medium">退货商品</span>
       <el-table
         border
@@ -38,7 +38,7 @@
         <span class="font-title-medium">合计：</span>
         <span class="font-title-medium color-danger">￥{{totalAmount}}</span>
       </div>
-    </el-card>
+    </el-card>-->
     <el-card shadow="never" class="standard-margin">
       <span class="font-title-medium">服务单信息</span>
       <div class="form-container-border">
@@ -105,7 +105,7 @@
                       style="width:200px;margin-left: 10px"></el-input>
           </el-col>
         </el-row>
-        <div v-show="orderReturnApply.status!==3">
+        <!--<div v-show="orderReturnApply.status!==3">
         <el-row>
           <el-col class="form-border form-left-bg font-small" :span="6" style="height:52px;line-height:32px">选择收货点
           </el-col>
@@ -138,7 +138,7 @@
           <el-col class="form-border form-left-bg font-small" :span="6">联系电话</el-col>
           <el-col class="form-border font-small" :span="18">{{currentAddress.phone}}</el-col>
         </el-row>
-        </div>
+        </div>-->
       </div>
       <div class="form-container-border" v-show="orderReturnApply.status!==0">
         <el-row>
@@ -256,7 +256,8 @@
     computed: {
       totalAmount() {
         if (this.orderReturnApply != null) {
-          return this.orderReturnApply.productRealPrice * this.orderReturnApply.productCount;
+          //return this.orderReturnApply.productRealPrice * this.orderReturnApply.productCount;
+          return this.orderReturnApply.productRealPrice
         } else {
           return 0;
         }

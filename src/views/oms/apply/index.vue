@@ -197,7 +197,7 @@
         }
       },
       formatReturnAmount(row){
-        return row.productRealPrice*row.productCount;
+        return row.productRealPrice;
       }
     },
     methods:{
