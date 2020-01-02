@@ -53,4 +53,11 @@ export function editMenu(data) {
   })
 }
 
+export function getRoleDetail() {
+  return request({
+    url: 'api/roles/roleDetail',
+    method: 'get'
+  })
+}
+
 export default { add, edit, del, get, editMenu }

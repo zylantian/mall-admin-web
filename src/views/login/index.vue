@@ -15,7 +15,7 @@
                     type="text"
                     v-model="loginForm.username"
                     autoComplete="on"
-                    placeholder="请输入用户名">
+                    placeholder="请输入手机号">
           <span slot="prefix">
             <svg-icon icon-class="user" class="color-main"></svg-icon>
           </span>
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-  import {isvalidUsername} from '@/utils/validate';
+  import {isvalidPhone} from '@/utils/validate';
   import {setSupport,getSupport,setCookie,getCookie} from '@/utils/support';
   import login_center_bg from '@/assets/images/login_center_bg.png'
 
@@ -56,8 +56,8 @@
     name: 'login',
     data() {
       const validateUsername = (rule, value, callback) => {
-        if (!isvalidUsername(value)) {
-          callback(new Error('请输入正确的用户名'))
+        if (!isvalidPhone(value)) {
+          callback(new Error('请输入正确的手机号码'))
         } else {
           callback()
         }

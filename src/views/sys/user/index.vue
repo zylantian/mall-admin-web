@@ -65,7 +65,7 @@
             <!--<el-form-item label="邮箱" prop="email">
               <el-input v-model="form.email" />
             </el-form-item>-->
-            <el-form-item label="部门" prop="dept.id">
+            <el-form-item label="部门" prop="dept.id" v-if="currentRole < 3">
               <treeselect v-model="form.dept.id" :options="depts" style="width: 178px" placeholder="选择部门" @select="selectFun" />
             </el-form-item>
             <el-form-item label="状态">
@@ -73,16 +73,15 @@
                 <el-radio v-for="item in dict.user_status" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item style="margin-bottom: 0;" label="角色" prop="roles">
+            <el-form-item style="margin-bottom: 0;" label="角色" prop="roles" v-if="currentRole < 3">
               <el-select v-model="form.roles" style="width: 437px" placeholder="请选择">
                 <el-option
                   v-for="item in roles"
                   :key="item.name"
-                  :disabled="level !== 1 && item.level <= level"
                   :label="item.name"
                   :value="item.id"
-
                 />
+                <!-- :disabled="level !== 1 && item.level <= level" -->
               </el-select>
             </el-form-item>
           </el-form>
@@ -173,7 +172,7 @@ import { resetPass } from '@/api/system/user'
 import { isvalidPhone } from '@/utils/validate'
 import { isvalidUsername } from '@/utils/validate'
 import { getDepts } from '@/api/system/dept'
-import { getAll, getLevel } from '@/api/system/role'
+import { getAll, getLevel, getRoleDetail } from '@/api/system/role'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
@@ -208,7 +207,7 @@ export default {
       },
       title: '用户',
       height: document.documentElement.clientHeight - 180 + 'px;',
-      deptName: '', depts: [], deptDatas: [], jobs: [], level: 1, roles: [],
+      deptName: '', depts: [], deptDatas: [], jobs: [], level: 1, roles: [],currentRole: 0,
       defaultProps: { children: 'children', label: 'name' },
       enabledTypeOptions: [
         { key: 'true', display_name: '激活' },
@@ -267,25 +266,33 @@ export default {
     },
     // 提交前做的操作
     beforeSubmitMethod() {
-      if (!this.form.dept.id) {
-        this.$message({
-          message: '部门不能为空',
-          type: 'warning'
-        })
-        return false
-      } else if (this.form.roles.length === 0) {
-        this.$message({
-          message: '角色不能为空',
-          type: 'warning'
-        })
-        return false
-      }
-      const roles = []
-      // this.form.roles.forEach(function(data, index) {
+      if (this.currentRole < 3) {
+        if (!this.form.dept.id) {
+          this.$message({
+            message: '部门不能为空',
+            type: 'warning'
+          })
+          return false
+        } else if (this.form.roles.length === 0) {
+          this.$message({
+            message: '角色不能为空',
+            type: 'warning'
+          })
+          return false
+        }
+        const roles = []
+        // this.form.roles.forEach(function(data, index) {
         const role = { id: this.form.roles }
         roles.push(role)
-      // })
-      this.form.roles = roles
+        // })
+        this.form.roles = roles
+      } else {
+        const roles = []
+        // this.form.roles.forEach(function(data, index) {
+        const role = { id: this.currentRole + 1 }
+        roles.push(role)
+        this.form.roles = roles
+      }
       return true
     },
     // 获取左侧部门数据
@@ -349,6 +356,9 @@ export default {
       getLevel().then(res => {
         this.level = res.data.level
       }).catch(() => {})
+      getRoleDetail().then(res => {
+        this.currentRole = res.data.id
+      })
     },
     addSuccessNotify() {
       this.$notify({

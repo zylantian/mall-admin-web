@@ -31,7 +31,7 @@
         </div>
     <!--表单渲染-->
     <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="670px">
-      <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
+      <el-form ref="form" :inline="true" :model="form" size="small" label-width="80px">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="form.username" />
         </el-form-item>

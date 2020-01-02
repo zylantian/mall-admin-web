@@ -75,13 +75,14 @@
                 <span>{{ parseTime(scope.row.createTime) }}</span>
               </template>
             </el-table-column>
-            <el-table-column v-if="checkPermission(['admin','roles:edit','roles:del'])" label="操作" width="130px" align="center" fixed="right">
+            <el-table-column  label="操作" width="130px" align="center" fixed="right">
               <template slot-scope="scope">
-                <el-button size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
+                <el-button v-if="scope.row.id > 4" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
                 <el-popover
                   :ref="scope.row.id"
                   placement="top"
                   width="180"
+                  v-if="scope.row.id > 4"
                 >
                   <p>确定删除本条数据吗？</p>
                   <div style="text-align: right; margin: 0">
