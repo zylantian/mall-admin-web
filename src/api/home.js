@@ -5,3 +5,11 @@ export function fetchList() {
     method: 'get'
   })
 }
+
+export function statisticsQuery(param) {
+  return request({
+    url: '/api/statistics/query',
+    method: 'get',
+    params: param
+  })
+}

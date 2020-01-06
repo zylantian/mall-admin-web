@@ -2,14 +2,14 @@
   <div class="app-container">
     <div class="total-layout">
       <el-row :gutter="20">
-        <el-col :span="statisticsData.isSales ? 12 : 6">
+        <el-col :span="statisticsData.isSales ? 8 : 6">
           <div class="total-frame">
             <img :src="img_home_order" class="total-icon">
             <div class="total-title">订单总数</div>
             <div class="total-value">{{statisticsData.orderAmount}}</div>
           </div>
         </el-col>
-        <el-col :span="statisticsData.isSales ? 12 : 6">
+        <el-col :span="statisticsData.isSales ? 8 : 6">
           <div class="total-frame">
             <img :src="img_home_today_amount" class="total-icon">
             <div class="total-title">销售总额</div>
@@ -23,7 +23,7 @@
             <div class="total-value">{{statisticsData.salesAmount}}</div>
           </div>
         </el-col>
-        <el-col :span="6" v-if="!statisticsData.isSales">
+        <el-col :span="statisticsData.isSales ? 8 : 6">
           <div class="total-frame">
             <img :src="enterprise_amount" class="total-icon">
             <div class="total-title">企业总数</div>

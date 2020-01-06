@@ -65,16 +65,19 @@
           </div>
         </el-col>
       </el-row>
+      <div class="layout-title">订单数量</div>
       <el-row :gutter="20">
         <el-col :span="12">
           <div style="padding: 10px;border: 1px solid #DCDFE6;">
             <div>
               <ve-pie
-                :data="pieSalesData"
+                :data="pieCompanyCountData"
                 :legend-visible="true"
                 :loading="loading"
                 :data-empty="dataEmpty"
-                :settings="chartSettings"></ve-pie>
+                :settings="pieFirstSettings"
+                :events="pieEvents">
+              </ve-pie>
             </div>
           </div>
         </el-col>
@@ -82,7 +85,35 @@
           <div style="padding: 10px;border: 1px solid #DCDFE6;">
             <div>
               <ve-pie
-                :data="pieEnterData"
+                :data="pieSalesCountData"
+                :legend-visible="true"
+                :loading="loading"
+                :data-empty="dataEmpty"
+                :settings="chartSettings"></ve-pie>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+      <div class="layout-title">订单金额</div>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <div style="padding: 10px;border: 1px solid #DCDFE6;">
+            <div>
+              <ve-pie
+                :data="pieCompanyAmountData"
+                :legend-visible="true"
+                :loading="loading"
+                :data-empty="dataEmpty"
+                :settings="pieFirstSettings"
+                :events="pieAmountEvents"></ve-pie>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div style="padding: 10px;border: 1px solid #DCDFE6;">
+            <div>
+              <ve-pie
+                :data="pieSalesAmountData"
                 :legend-visible="true"
                 :loading="loading"
                 :data-empty="dataEmpty"
@@ -102,29 +133,16 @@
   import img_home_yesterday_amount from '@/assets/images/home_yesterday_amount.png';
   import sales_amount from '@/assets/images/sales_amount.png';
   import enterprise_amount from '@/assets/images/enterprise_amount.png';
+  import {statisticsQuery} from '@/api/home'
+
   const DATA_FROM_BACKEND = {
-    columns: ['date', 'orderCount','orderAmount'],
-    rows: [
-      {date: '2018-11-01', orderCount: 10, orderAmount: 1093},
-      {date: '2018-11-02', orderCount: 20, orderAmount: 2230},
-      {date: '2018-11-03', orderCount: 0, orderAmount: 0},
-      {date: '2018-11-04', orderCount: 0, orderAmount: 0},
-      {date: '2018-11-05', orderCount: 80, orderAmount: 8492},
-      {date: '2018-11-06', orderCount: 60, orderAmount: 6293},
-      {date: '2018-11-07', orderCount: 20, orderAmount: 2293},
-      {date: '2018-11-08', orderCount: 60, orderAmount: 6293},
-      {date: '2018-11-09', orderCount: 50, orderAmount: 5293},
-      {date: '2018-11-10', orderCount: 30, orderAmount: 3293},
-      {date: '2018-11-11', orderCount: 20, orderAmount: 2293},
-      {date: '2018-11-12', orderCount: 80, orderAmount: 8293},
-      {date: '2018-11-13', orderCount: 100, orderAmount: 10293},
-      {date: '2018-11-14', orderCount: 10, orderAmount: 1293},
-      {date: '2018-11-15', orderCount: 40, orderAmount: 4293}
-    ]
+    columns: ['date', 'orderCount', 'orderAmount'],
+    rows: []
   };
   export default {
     name: 'home',
     data() {
+      var self = this;
       return {
         pickerOptions: {
           shortcuts: [{
@@ -132,63 +150,109 @@
             onClick(picker) {
               const end = new Date();
               let start = new Date();
-              start.setFullYear(2018);
-              start.setMonth(10);
-              start.setDate(1);
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 7);
+              start.setTime(end.getTime() - 3600 * 1000 * 24 * 7);
               picker.$emit('pick', [start, end]);
             }
           }, {
             text: '最近一月',
             onClick(picker) {
               const end = new Date();
-              let start = new Date();
-              start.setFullYear(2018);
-              start.setMonth(10);
-              start.setDate(1);
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 30);
+              var year = end.getFullYear(); //获取当前日期的年份
+              var month = end.getMonth() + 1; //获取当前日期的月份
+              var day = end.getDate(); //获取当前日期的日
+              var year2 = year;
+              var month2 = parseInt(month) - 1;
+              if (month2 <= 0) {
+                year2 = parseInt(year2) - 1;
+                month2 = 12 - (Math.abs(month2) % 12) - 1;
+              }
+              if (month2 < 10) {
+                month2 = '0' + month2;
+              }
+              let start = new Date(year2, month2, day)
+              console.log(day)
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一季度',
+            onClick(picker) {
+              const end = new Date();
+              var year = end.getFullYear(); //获取当前日期的年份
+              var month = end.getMonth() + 1; //获取当前日期的月份
+              var day = end.getDate(); //获取当前日期的日
+              var year2 = year;
+              var month2 = parseInt(month) - 3;
+              if (month2 <= 0) {
+                year2 = parseInt(year2) - 1;
+                month2 = 12 - (Math.abs(month2) % 12) - 1;
+              }
+              if (month2 < 10) {
+                month2 = '0' + month2;
+              }
+              let start = new Date(year2, month2, day)
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一年',
+            onClick(picker) {
+              const end = new Date();
+              var year = end.getFullYear(); //获取当前日期的年份
+              var month = end.getMonth() + 1; //获取当前日期的月份
+              var day = end.getDate(); //获取当前日期的日
+              var year2 = year;
+              var month2 = parseInt(month) - 12;
+              if (month2 <= 0) {
+                year2 = parseInt(year2) - 1;
+                month2 = 12 - (Math.abs(month2) % 12) - 1;
+              }
+              if (month2 < 10) {
+                month2 = '0' + month2;
+              }
+              let start = new Date(year2, month2, day)
               picker.$emit('pick', [start, end]);
             }
           }]
         },
         orderCountDate: '',
         chartSettings: {
-          xAxisType: 'time',
-          area:true,
-          axisSite: { right: ['orderAmount']},
-        labelMap: {'orderCount': '订单数量', 'orderAmount': '订单金额'}},
+          xAxisType: 'category',
+          area: true,
+          axisSite: {right: ['orderAmount']},
+          labelMap: {'orderCount': '订单数量', 'orderAmount': '订单金额'}
+        },
+        pieFirstSettings: {
+          selectedMode: 'single',
+          hoverAnimation: false
+        },
         chartData: {
-          columns: ['日期', '访问用户', '下单用户', '下单率'],
-          rows: [
-            { '日期': '1/1', '访问用户': 1393, '下单用户': 1093, '下单率': 0.32 },
-            { '日期': '1/2', '访问用户': 3530, '下单用户': 3230, '下单率': 0.26 },
-            { '日期': '1/3', '访问用户': 2923, '下单用户': 2623, '下单率': 0.76 },
-            { '日期': '1/4', '访问用户': 1723, '下单用户': 1423, '下单率': 0.49 },
-            { '日期': '1/5', '访问用户': 3792, '下单用户': 3492, '下单率': 0.323 },
-            { '日期': '1/6', '访问用户': 4593, '下单用户': 4293, '下单率': 0.78 }
-          ]
+          columns: ['date', 'orderCount', 'orderAmount'],
+          rows: []
         },
-        pieSalesData: {
-          columns: ['日期', '访问用户'],
-          rows: [
-            { '日期': '1/1', '访问用户': 1393 },
-            { '日期': '1/2', '访问用户': 3530 },
-            { '日期': '1/3', '访问用户': 2923 },
-            { '日期': '1/4', '访问用户': 1723 },
-            { '日期': '1/5', '访问用户': 3792 },
-            { '日期': '1/6', '访问用户': 4593 }
-          ]
+        pieEvents: {
+          click: function (e) {
+            self.pieSalesCountData.rows = self.companyCountPieVos[e.dataIndex].sonStatisticsPieVoList
+          }
         },
-        pieEnterData: {
-          columns: ['日期', '访问用户'],
-          rows: [
-            { '日期': '1/1', '访问用户': 1393 },
-            { '日期': '1/2', '访问用户': 3530 },
-            { '日期': '1/3', '访问用户': 2923 },
-            { '日期': '1/4', '访问用户': 1723 },
-            { '日期': '1/5', '访问用户': 3792 },
-            { '日期': '1/6', '访问用户': 4593 }
-          ]
+        pieAmountEvents: {
+          click: function (e) {
+            self.pieSalesAmountData.rows = self.companySumPieVos[e.dataIndex].sonStatisticsPieVoList
+          }
+        },
+        pieCompanyCountData: {
+          columns: ['name', 'value'],
+          rows: []
+        },
+        pieSalesCountData: {
+          columns: ['name', 'value'],
+          rows: []
+        },
+        pieCompanyAmountData: {
+          columns: ['name', 'value'],
+          rows: []
+        },
+        pieSalesAmountData: {
+          columns: ['name', 'value'],
+          rows: []
         },
         loading: false,
         dataEmpty: false,
@@ -196,41 +260,49 @@
         img_home_today_amount,
         img_home_yesterday_amount,
         sales_amount,
-        enterprise_amount
+        enterprise_amount,
+        companyCountPieVos: [],
+        companySumPieVos: [],
+        companyCountIndex: 0,
+        companyAmountIndex: 0
       }
     },
-    created(){
+    created() {
       this.initOrderCountDate();
       this.getData();
     },
-    methods:{
-      handleDateChange(){
+    methods: {
+      handleDateChange() {
         this.getData();
       },
-      initOrderCountDate(){
+      initOrderCountDate() {
         let start = new Date();
-        start.setFullYear(2018);
-        start.setMonth(10);
-        start.setDate(1);
         const end = new Date();
-        end.setTime(start.getTime() + 1000 * 60 * 60 * 24 * 7);
-        this.orderCountDate=[start,end];
+        start.setTime(end.getTime() - 1000 * 60 * 60 * 24 * 7);
+        this.orderCountDate = [start, end];
       },
-      getData(){
+      getData() {
         setTimeout(() => {
-          this.chartData = {
-            columns: ['date', 'orderCount','orderAmount'],
-            rows: []
-          };
-          for(let i=0;i<DATA_FROM_BACKEND.rows.length;i++){
-            let item= DATA_FROM_BACKEND.rows[i];
-            let currDate= str2Date(item.date);
-            let start=this.orderCountDate[0];
-            let end=this.orderCountDate[1];
-            if(currDate.getTime()>=start.getTime()&&currDate.getTime()<=end.getTime()){
-              this.chartData.rows.push(item);
-            }
+          let param = {
+            timeStart: this.orderCountDate[0],
+            timeEnd: this.orderCountDate[1]
           }
+          statisticsQuery(param).then(res => {
+            let lineVos = res.data.lineVos
+            if (lineVos.length > 0) {
+              this.chartData.rows = lineVos
+            }
+            this.companyCountPieVos = res.data.companyCountPieVos
+            this.companySumPieVos = res.data.companySumPieVos
+            if (this.companyCountPieVos.length > 0) {
+              this.pieCompanyCountData.rows = this.companyCountPieVos
+              this.pieSalesCountData.rows = this.companyCountPieVos[0].sonStatisticsPieVoList
+            }
+            if (this.companySumPieVos.length > 0) {
+              this.pieCompanyAmountData.rows = this.companySumPieVos
+              this.pieSalesAmountData.rows = this.companyCountPieVos[0].sonStatisticsPieVoList
+            }
+          })
           this.dataEmpty = false;
           this.loading = false
         }, 1000)
@@ -246,93 +318,15 @@
     margin-right: 120px;
   }
 
-  .address-layout {
-  }
-
-  .total-layout {
-    margin-top: 20px;
-  }
-
-  .total-frame {
-    border: 1px solid #DCDFE6;
-    padding: 20px;
-    height: 100px;
-  }
-
-  .total-icon {
-    color: #409EFF;
-    width: 60px;
-    height: 60px;
-  }
-
-  .total-title {
-    position: relative;
-    font-size: 16px;
-    color: #909399;
-    left: 70px;
-    top: -50px;
-  }
-
-  .total-value {
-    position: relative;
-    font-size: 18px;
-    color: #606266;
-    left: 70px;
-    top: -40px;
-  }
-
-  .un-handle-layout {
-    margin-top: 20px;
-    border: 1px solid #DCDFE6;
-  }
-
   .layout-title {
     color: #606266;
     padding: 15px 20px;
     background: #F2F6FC;
     font-weight: bold;
   }
-
-  .un-handle-content {
-    padding: 20px 40px;
-  }
-
-  .un-handle-item {
-    border-bottom: 1px solid #EBEEF5;
-    padding: 10px;
-  }
-
-  .overview-layout {
-    margin-top: 20px;
-  }
-
-  .overview-item-value {
-    font-size: 24px;
-    text-align: center;
-  }
-
-  .overview-item-title {
-    margin-top: 10px;
-    text-align: center;
-  }
-
-  .out-border {
-    border: 1px solid #DCDFE6;
-  }
-
   .statistics-layout {
     margin-top: 20px;
     border: 1px solid #DCDFE6;
   }
-  .mine-layout {
-    position: absolute;
-    right: 140px;
-    top: 107px;
-    width: 250px;
-    height: 235px;
-  }
-  .address-content{
-    padding: 20px;
-    font-size: 18px
-  }
+
 </style>
