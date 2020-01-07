@@ -1,12 +1,10 @@
 <template> 
   <div>
     <el-upload
-      action="http://hunanjianyanceshi.oss-cn-shenzhen.aliyuncs.com"
-      :data="dataObj"
+      action="http://localhost:9080/hnimg/oss/upload"
       list-type="picture"
       :multiple="false" :show-file-list="showFileList"
       :file-list="fileList"
-      :before-upload="beforeUpload"
       :on-remove="handleRemove"
       :on-success="handleUploadSuccess"
       :on-preview="handlePreview">
@@ -96,7 +94,7 @@
       handleUploadSuccess(res, file) {
         this.showFileList = true;
         this.fileList.pop();
-        this.fileList.push({name: file.name, url: this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name});
+        this.fileList.push({name: file.name, url: res.content});
         this.emitInput(this.fileList[0].url);
       }
     }

@@ -7,7 +7,10 @@
                ref="loginForm"
                label-position="left">
         <div style="text-align: center">
+          <img :src="logo" style="width: 56px;height: 56px;color: #409EFF">
+<!--
           <svg-icon icon-class="login-mall" style="width: 56px;height: 56px;color: #409EFF"></svg-icon>
+-->
         </div>
         <h2 class="login-title color-main">湖南建研</h2>
         <el-form-item prop="username">
@@ -51,6 +54,7 @@
   import {isvalidPhone, isvalidUsername} from '@/utils/validate';
   import {setSupport,getSupport,setCookie,getCookie} from '@/utils/support';
   import login_center_bg from '@/assets/images/login_center_bg.png'
+  import logo from '@/assets/images/logo.png';
 
   export default {
     name: 'login',
@@ -82,7 +86,8 @@
         pwdType: 'password',
         login_center_bg,
         dialogVisible:false,
-        supportDialogVisible:false
+        supportDialogVisible:false,
+        logo
       }
     },
     created() {

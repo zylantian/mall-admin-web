@@ -1,11 +1,9 @@
 <template> 
   <div>
     <el-upload
-      action="http://hunanjianyanceshi.oss-cn-shenzhen.aliyuncs.com"
-      :data="dataObj"
+      action="http://localhost:9080/hnimg/oss/upload"
       list-type="picture-card"
       :file-list="fileList"
-      :before-upload="beforeUpload"
       :on-remove="handleRemove"
       :on-success="handleUploadSuccess"
       :on-preview="handlePreview"
@@ -71,27 +69,9 @@
         this.dialogVisible = true;
         this.dialogImageUrl=file.url;
       },
-      beforeUpload(file) {
-        let _self = this;
-        return new Promise((resolve, reject) => {
-          policy().then(response => {
-            _self.dataObj.policy = response.data.policy;
-            _self.dataObj.signature = response.data.signature;
-            _self.dataObj.ossaccessKeyId = response.data.accessKeyId;
-            _self.dataObj.key = response.data.dir + '/${filename}';
-            _self.dataObj.dir = response.data.dir;
-            _self.dataObj.host = response.data.host;
-            resolve(true)
-          }).catch(err => {
-            console.log(err)
-            reject(false)
-          })
-        })
-      },
       handleUploadSuccess(res, file) {
-        console.log(file)
         console.log(this.dataObj)
-        this.fileList.push({url: file.name,url:this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name});
+        this.fileList.push({name: file.name,url: res.content});
         this.emitInput(this.fileList);
       },
       handleExceed(files, fileList) {
@@ -100,7 +80,7 @@
           type: 'warning',
           duration:1000
         });
-      },
+      }
     }
   }
 </script>
