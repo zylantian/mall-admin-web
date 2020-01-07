@@ -48,7 +48,7 @@
 </template>
 
 <script>
-  import {isvalidPhone} from '@/utils/validate';
+  import {isvalidPhone, isvalidUsername} from '@/utils/validate';
   import {setSupport,getSupport,setCookie,getCookie} from '@/utils/support';
   import login_center_bg from '@/assets/images/login_center_bg.png'
 
@@ -56,8 +56,8 @@
     name: 'login',
     data() {
       const validateUsername = (rule, value, callback) => {
-        if (!isvalidPhone(value)) {
-          callback(new Error('请输入正确的手机号码'))
+        if (!isvalidPhone(value) && !isvalidUsername(value)) {
+          callback(new Error('请输入正确的用户名或者手机号码'))
         } else {
           callback()
         }
