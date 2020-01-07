@@ -65,8 +65,8 @@
           </div>
         </el-col>
       </el-row>
-      <div class="layout-title">订单数量</div>
-      <el-row :gutter="20">
+      <div v-if="!isSales" class="layout-title">订单数量</div>
+      <el-row v-if="!isSales"  :gutter="20">
         <el-col :span="12">
           <div style="padding: 10px;border: 1px solid #DCDFE6;">
             <div>
@@ -94,8 +94,8 @@
           </div>
         </el-col>
       </el-row>
-      <div class="layout-title">订单金额</div>
-      <el-row :gutter="20">
+      <div v-if="!isSales" class="layout-title">订单金额</div>
+      <el-row v-if="!isSales" :gutter="20">
         <el-col :span="12">
           <div style="padding: 10px;border: 1px solid #DCDFE6;">
             <div>
@@ -170,7 +170,6 @@
                 month2 = '0' + month2;
               }
               let start = new Date(year2, month2, day)
-              console.log(day)
               picker.$emit('pick', [start, end]);
             }
           }, {
@@ -263,8 +262,7 @@
         enterprise_amount,
         companyCountPieVos: [],
         companySumPieVos: [],
-        companyCountIndex: 0,
-        companyAmountIndex: 0
+        isSales: false
       }
     },
     created() {
@@ -273,6 +271,8 @@
     },
     methods: {
       handleDateChange() {
+        this.loading = true
+        this.dataEmpty = true
         this.getData();
       },
       initOrderCountDate() {
@@ -302,6 +302,7 @@
               this.pieCompanyAmountData.rows = this.companySumPieVos
               this.pieSalesAmountData.rows = this.companyCountPieVos[0].sonStatisticsPieVoList
             }
+            this.isSales = res.data.isSales
           })
           this.dataEmpty = false;
           this.loading = false
