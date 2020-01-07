@@ -155,17 +155,20 @@ export const constantRouterMap = [
     redirect: '/oms/order',
     name: 'oms',
     meta: {title: '订单', icon: 'order'},
+    hidden: true,
     children: [
       {
         path: 'order',
         name: 'order',
         component: () => import('@/views/oms/order/index'),
-        meta: {title: '订单列表', icon: 'product-list'}
+        meta: {title: '订单列表', icon: 'product-list'},
+        hidden: true
       },
       {
         path: 'orderStatistics',
         name: 'orderStatistics',
         component: () => import('@/views/oms/statistics/index'),
+        hidden: true,
         meta: {title: '订单统计', icon: 'order-statistics'}
       },
       {
@@ -186,18 +189,21 @@ export const constantRouterMap = [
         path: 'orderSetting',
         name: 'orderSetting',
         component: () => import('@/views/oms/order/setting'),
+        hidden: true,
         meta: {title: '订单设置', icon: 'order-setting'}
       },
       {
         path: 'returnApply',
         name: 'returnApply',
         component: () => import('@/views/oms/apply/index'),
+        hidden: true,
         meta: {title: '退货申请处理', icon: 'order-return'}
       },
       {
         path: 'returnReason',
         name: 'returnReason',
         component: () => import('@/views/oms/apply/reason'),
+        hidden: true,
         meta: {title: '退货原因设置', icon: 'order-return-reason'}
       },
       {
