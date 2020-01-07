@@ -30,7 +30,15 @@ export const constantRouterMap = [
       name: 'home',
       component: () => import('@/views/home/index'),
       meta: {title: '首页', icon: 'home', affix: true, noCache: true}
-    }]
+    },
+     {
+       path: 'updatePwd',
+       name: 'updatePwd',
+       component: () => import('@/views/sys/user/resetpwd'),
+       meta: {title: '修改密码'},
+       hidden:true
+     }
+    ]
   },
   {
     path: '/pms',

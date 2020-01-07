@@ -63,5 +63,13 @@ export function updateEmail(form) {
   })
 }
 
+export function updatePwd(param) {
+  return request({
+    url: 'api/users/updatePass',
+    method: 'post',
+    data:param
+  })
+}
+
 export default { add, edit, del }
 
