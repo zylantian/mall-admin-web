@@ -61,10 +61,10 @@
           <el-radio  v-model="form.type" :label="0">内部部门</el-radio>
           <el-radio  v-model="form.type" :label="1">分公司</el-radio>
         </el-form-item>
-        <el-form-item v-if="form.type != 0 && from.type != 1"  label="区域" >
+        <el-form-item v-if="form.type != 0 && form.type != 1"  label="区域" >
           <v-region @values="regionChange" v-model="form.region"></v-region>
         </el-form-item>
-        <el-form-item v-if="form.type != 0 && from.type != 1"  label="账期" >
+        <el-form-item v-if="form.type != 0 && form.type != 1"  label="账期" >
           <el-input v-model="form.accountPeriod" style="width: 370px;" />
         </el-form-item>
       </el-form>
@@ -120,7 +120,7 @@
       </el-table-column>
       <el-table-column  v-if="checkPermission(['admin','dept:edit','dept:del'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button  size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
+          <el-button  size="mini" type="primary" :disabled="scope.row.id === 1" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
           <el-popover
             :ref="scope.row.id"
             placement="top"

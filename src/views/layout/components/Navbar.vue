@@ -4,13 +4,18 @@
     <breadcrumb></breadcrumb>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
-        <img class="user-avatar" :src="avatar">
+        <img :src="avatar" class="user-avatar">
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
         <router-link class="inlineBlock" to="/">
           <el-dropdown-item>
             首页
+          </el-dropdown-item>
+        </router-link>
+        <router-link class="inlineBlock" to="/">
+          <el-dropdown-item>
+            修改密码
           </el-dropdown-item>
         </router-link>
         <el-dropdown-item divided>
@@ -25,6 +30,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import avatar from '@/assets/images/avatar.png';
 
 export default {
   components: {
@@ -33,9 +39,13 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'sidebar',
-      'avatar'
+      'sidebar'
     ])
+  },
+  data() {
+    return {
+      avatar
+    }
   },
   methods: {
     toggleSideBar() {

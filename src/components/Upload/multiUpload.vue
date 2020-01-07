@@ -89,6 +89,8 @@
         })
       },
       handleUploadSuccess(res, file) {
+        console.log(file)
+        console.log(this.dataObj)
         this.fileList.push({url: file.name,url:this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name});
         this.emitInput(this.fileList);
       },

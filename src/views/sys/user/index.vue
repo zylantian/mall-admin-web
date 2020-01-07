@@ -110,6 +110,7 @@
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.status"
+                :disabled="scope.row.username === 'admin'"
                 active-color="#409EFF"
                 inactive-color="#F56C6C"
                 @change="changeEnabled(scope.row, scope.row.status)"
@@ -123,18 +124,18 @@
           </el-table-column>
           <el-table-column v-if="checkPermission(['admin','user:edit','user:del'])" label="操作" width="180" align="center" fixed="right">
             <template slot-scope="scope">
-              <el-button size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
+              <el-button v-if="scope.row.username !== 'admin'" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
               <el-popover
                 :ref="scope.row.username"
                 placement="top"
                 width="180"
               >
                 <p>确定重置密码吗？</p>
-                <div style="text-align: right; margin: 0">
+                <div style="text-align: right; margin: 0" >
                   <el-button size="mini" type="text" @click="$refs[scope.row.username].doClose()">取消</el-button>
                   <el-button  type="primary" size="mini" @click="resetpsd(scope.row.id)">确定</el-button>
                 </div>
-                <el-button slot="reference" type="primary" icon="el-icon-lock" size="mini" />
+                <el-button v-if="scope.row.username !== 'admin'" slot="reference" type="primary" icon="el-icon-lock" size="mini" />
               </el-popover>
               <el-popover
                 :ref="scope.row.id"
@@ -142,11 +143,11 @@
                 width="180"
               >
                 <p>确定删除本条数据吗？</p>
-                <div style="text-align: right; margin: 0">
+                <div  style="text-align: right; margin: 0" >
                   <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
                   <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定</el-button>
                 </div>
-                <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
+                <el-button v-if="scope.row.username !== 'admin'"  slot="reference" type="danger" icon="el-icon-delete" size="mini" />
               </el-popover>
             </template>
           </el-table-column>
@@ -321,6 +322,14 @@ export default {
     },
     // 改变状态
     changeEnabled(data, val) {
+      if (data.username == 'admin') {
+        this.$notify({
+          title: 'admin不允许修改',
+          type: 'success',
+          duration: 2500
+        })
+        return;
+      }
       this.$confirm('此操作将 "' + this.dict.label.user_status[val] + '" ' + data.username + ', 是否继续？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
