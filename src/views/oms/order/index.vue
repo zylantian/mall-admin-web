@@ -269,7 +269,7 @@
           }
         ],
         logisticsDialogVisible:false,
-        deliverySn: ''
+        deliverySn: null
       }
     },
     created() {
@@ -343,7 +343,7 @@
           });
           return;
         } else {
-          this.deliverySn = row.deliverySn
+          this.deliverySn = row.id
           this.logisticsDialogVisible=true;
         }
       },

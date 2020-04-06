@@ -10,8 +10,8 @@ import VCharts from 'v-charts'
 import '@/styles/index.scss' // global css
 
 import App from './App'
-import router from './router/routers'
 import store from './store'
+import router from './router/routers'
 import dict from './components/Dict'
 import vRegion from 'v-region'
 import './router/index' // permission control

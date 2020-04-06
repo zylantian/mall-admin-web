@@ -385,14 +385,14 @@
         markOrderDialogVisible:false,
         markInfo:{note:null},
         logisticsDialogVisible:false,
-        deliverySn: ''
+        deliverySn: null
       }
     },
     created() {
       this.id = this.list = this.$route.query.id;
       getOrderDetail(this.id).then(response => {
         this.order = response.data;
-        this.deliverySn = this.order.deliverySn
+        this.deliverySn = this.order.id
       });
     },
     filters: {

@@ -2,11 +2,11 @@
   <div class="app-container">
     <el-row :gutter="50">
       <!--侧边部门数据-->
-      <el-col :xs="9" :sm="6" :md="4" :lg="4" :xl="4">
+      <el-col :xs="9" :sm="6" :md="4" :lg="4" :xl="4" style="padding-right: 0px">
         <div class="head-container">
           <el-input v-model="deptName" clearable size="small" placeholder="输入部门名称搜索" prefix-icon="el-icon-search" class="filter-item" @input="getDeptDatas" />
         </div>
-        <el-tree :data="deptDatas" :props="defaultProps" :expand-on-click-node="false" default-expand-all @node-click="handleNodeClick" />
+        <el-tree style="margin-top: 10px" :data="deptDatas" :props="defaultProps" :expand-on-click-node="false" default-expand-all @node-click="handleNodeClick" />
       </el-col>
       <!--用户数据-->
       <el-col :xs="15" :sm="18" :md="20" :lg="20" :xl="20">

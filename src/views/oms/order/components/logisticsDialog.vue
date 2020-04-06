@@ -63,10 +63,10 @@
           return
         }
         let params = new URLSearchParams();
-        params.append("deliverysn", [this.deliverySn]);
+        params.append("orderId", [this.deliverySn]);
         viewLogistics(params).then(response=>{
           if (response.code == 200) {
-            this.logisticsList = response.content.result.list
+            this.logisticsList = response.data.result.list
           } else {
             this.logisticsList = Object.assign({},defaultLogisticsList)
           }

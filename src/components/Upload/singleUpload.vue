@@ -1,7 +1,7 @@
 <template> 
   <div>
     <el-upload
-      action="http://localhost:9080/hnimg/oss/upload"
+      :action="uploadUrl()"
       list-type="picture"
       :multiple="false" :show-file-list="showFileList"
       :file-list="fileList"
@@ -64,6 +64,9 @@
       };
     },
     methods: {
+      uploadUrl() {
+        return process.env.BASE_API + "/hnimg/oss/upload";
+      },
       emitInput(val) {
         this.$emit('input', val)
       },

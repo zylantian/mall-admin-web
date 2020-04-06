@@ -1,7 +1,7 @@
 <template> 
   <div>
     <el-upload
-      action="http://localhost:9080/hnimg/oss/upload"
+      :action="uploadUrl()"
       list-type="picture-card"
       :file-list="fileList"
       :on-remove="handleRemove"
@@ -55,6 +55,9 @@
       }
     },
     methods: {
+      uploadUrl() {
+        return process.env.BASE_API + "/hnimg/oss/upload";
+      },
       emitInput(fileList) {
         let value=[];
         for(let i=0;i<fileList.length;i++){
@@ -70,7 +73,7 @@
         this.dialogImageUrl=file.url;
       },
       handleUploadSuccess(res, file) {
-        console.log(this.dataObj)
+        //console.log(this.dataObj)
         this.fileList.push({name: file.name,url: res.content});
         this.emitInput(this.fileList);
       },
