@@ -36,16 +36,17 @@
             type="primary"
             icon="el-icon-plus"
             @click="showAddFormDialog"
+            v-if="currentRole != 2"
           >新增</el-button>
           <!-- 导出 -->
-          <el-button
+          <!--<el-button
             :loading="downloadLoading"
             size="mini"
             class="filter-item"
             type="warning"
             icon="el-icon-download"
             @click="downloadMethod"
-          >导出</el-button>
+          >导出</el-button>-->
         </div>
         <!--表单渲染-->
         <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="670px">
@@ -65,16 +66,16 @@
             <!--<el-form-item label="邮箱" prop="email">
               <el-input v-model="form.email" />
             </el-form-item>-->
-            <el-form-item label="部门" prop="dept.id" v-if="currentRole < 3">
+            <el-form-item label="部门" prop="dept.id" v-if="currentRole < 3 && isAdd">
               <treeselect v-model="form.dept.id" :options="depts" style="width: 178px" placeholder="选择部门" @select="selectFun" />
             </el-form-item>
-            <el-form-item label="状态">
+            <el-form-item label="状态" v-if="isAdd">
               <el-radio-group v-model="form.status">
                 <el-radio v-for="item in dict.user_status" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item style="margin-bottom: 0;" label="角色" prop="roles" v-if="currentRole < 3">
-              <el-select v-model="form.roles" style="width: 437px" placeholder="请选择">
+            <el-form-item style="margin-bottom: 0;" label="角色" prop="roles" v-if="isAdd">
+              <el-select v-model="form.tempRole" style="width: 437px" placeholder="请选择">
                 <el-option
                   v-for="item in roles"
                   :key="item.name"
@@ -110,7 +111,7 @@
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.status"
-                :disabled="scope.row.username === 'admin'"
+                :disabled="scope.row.username === 'admin' || !hasPermission(scope.row) || isSelf(scope.row)"
                 active-color="#409EFF"
                 inactive-color="#F56C6C"
                 @change="changeEnabled(scope.row, scope.row.status)"
@@ -124,16 +125,17 @@
           </el-table-column>
           <el-table-column v-if="checkPermission(['admin','user:edit','user:del'])" label="操作" width="180" align="center" fixed="right">
             <template slot-scope="scope">
-              <el-button v-if="scope.row.username !== 'admin'" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
+              <el-button v-if="scope.row.username !== 'admin' && hasPermission(scope.row)" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
               <el-popover
                 :ref="scope.row.username"
                 placement="top"
                 width="180"
+                v-if="scope.row.username !== 'admin' &&  hasPermission(scope.row) && !isSelf(scope.row)"
               >
                 <p>确定重置密码吗？</p>
                 <div style="text-align: right; margin: 0" >
                   <el-button size="mini" type="text" @click="$refs[scope.row.username].doClose()">取消</el-button>
-                  <el-button  type="primary" size="mini" @click="resetpsd(scope.row.id)">确定</el-button>
+                  <el-button  type="primary" size="mini" @click="resetpsd(scope.row)">确定</el-button>
                 </div>
                 <el-button v-if="scope.row.username !== 'admin'" slot="reference" type="primary" icon="el-icon-lock" size="mini" />
               </el-popover>
@@ -141,13 +143,14 @@
                 :ref="scope.row.id"
                 placement="top"
                 width="180"
+                v-if="scope.row.username !== 'admin' &&  hasPermission(scope.row) && !isSelf(scope.row)"
               >
                 <p>确定删除本条数据吗？</p>
                 <div  style="text-align: right; margin: 0" >
                   <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
                   <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定</el-button>
                 </div>
-                <el-button v-if="scope.row.username !== 'admin'"  slot="reference" type="danger" icon="el-icon-delete" size="mini" />
+                <el-button v-if="scope.row.username !== 'admin' && !isSelf(scope.row)"  slot="reference" type="danger" icon="el-icon-delete" size="mini" />
               </el-popover>
             </template>
           </el-table-column>
@@ -209,12 +212,13 @@ export default {
       title: '用户',
       height: document.documentElement.clientHeight - 180 + 'px;',
       deptName: '', depts: [], deptDatas: [], jobs: [], level: 1, roles: [],currentRole: 0,
+      currentUserId: -999,
       defaultProps: { children: 'children', label: 'name' },
       enabledTypeOptions: [
         { key: 'true', display_name: '激活' },
         { key: 'false', display_name: '锁定' }
       ],
-      form: { username: null, nickName: null, password: '123456', email: null, status: 'true', roles: [], dept: { id: null }, phone: null },
+      form: { username: null, nickName: null, password: '123456', email: null, status: 'true', roles: [], tempRole: null, dept: { id: null }, phone: null },
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' , validator: validUsername}
@@ -232,6 +236,7 @@ export default {
   created() {
     this.$nextTick(() => {
       this.getDeptDatas()
+      this.getRoleLevel()
       this.init()
     })
   },
@@ -246,24 +251,31 @@ export default {
       this.url = 'api/users'
       return true
     },
+    hasPermission(data) {
+      let optLevel = data.roles[0].level
+      return this.level <= optLevel
+    },
+    isSelf(data) {
+      return this.currentUserId === data.id
+    },
     // 打开新增弹窗前做的操作
     beforeShowAddForm() {
       this.getDepts()
       this.getRoles()
-      this.getRoleLevel()
+      //this.getRoleLevel()
     },
     // 打开编辑弹窗前做的操作
     beforeShowEditForm(data) {
       this.getDepts()
       this.getRoles()
-      this.getRoleLevel()
+
       // this.getJobs(this.form.dept.id)
       this.form.status = data.status.toString()
       const roles = []
       data.roles.forEach(function(role, index) {
         roles.push(role.id)
       })
-      this.form.roles = roles
+      this.form.tempRole = roles[0]
     },
     // 提交前做的操作
     beforeSubmitMethod() {
@@ -274,7 +286,7 @@ export default {
             type: 'warning'
           })
           return false
-        } else if (this.form.roles.length === 0) {
+        } else if (this.form.tempRole == null || this.form.tempRole == undefined) {
           this.$message({
             message: '角色不能为空',
             type: 'warning'
@@ -283,14 +295,14 @@ export default {
         }
         const roles = []
         // this.form.roles.forEach(function(data, index) {
-        const role = { id: this.form.roles }
+        const role = { id: this.form.tempRole }
         roles.push(role)
         // })
         this.form.roles = roles
       } else {
         const roles = []
         // this.form.roles.forEach(function(data, index) {
-        const role = { id: this.currentRole + 1 }
+        const role = { id: this.form.tempRole }
         roles.push(role)
         this.form.roles = roles
       }
@@ -364,6 +376,7 @@ export default {
     getRoleLevel() {
       getLevel().then(res => {
         this.level = res.data.level
+        this.currentUserId = res.data.userId
       }).catch(() => {})
       getRoleDetail().then(res => {
         this.currentRole = res.data.id
@@ -376,14 +389,16 @@ export default {
         duration: 2500
       })
     },
-    resetpsd(id) {
-      resetPass(id).then(res => {
+    resetpsd(data) {
+      resetPass(data.id).then(res => {
         this.$notify({
           title: '重置密码成功，密码为123456',
           type: 'success',
-          duration: 2500
+          duration: 500
         })
+        this.$refs[data.username].doClose()
       })
+
     }
   }
 }

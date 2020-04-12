@@ -30,33 +30,14 @@
           >导出</el-button>
         </div>
     <!--表单渲染-->
-    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="500px">
-      <el-form ref="form" :inline="true" :model="form" size="small" label-width="100px">
+    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="670px">
+      <el-form ref="form" :inline="true" :model="form" size="small" label-width="80px">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="form.username" />
         </el-form-item>
-        <!--<el-form-item label="电话" prop="phone">
+        <el-form-item label="电话" prop="phone">
           <el-input v-model.number="form.phone" />
-        </el-form-item>-->
-        <el-form-item  label="企业名称" prop="enterName">
-          <el-input v-model="form.enterName" />
         </el-form-item>
-        <el-form-item  label="是否VIP" prop="vip">
-          <el-switch
-            v-model="form.isVip"
-            active-color="#409EFF"
-            inactive-color="#F56C6C"
-          />
-        </el-form-item>
-        <el-form-item v-if="form.isVip" label="赊账额度(元)" prop="creditAmount">
-          <el-input type="number" v-model="form.creditAmount" />
-        </el-form-item>
-        <el-form-item v-if="form.isVip" label="账期（天）" prop="creditDays">
-          <el-input type="number" v-model="form.creditDays" />
-        </el-form-item>
-        <!--<el-form-item label="税务号" prop="enterSn">
-          <el-input v-model="form.enterSn" />
-        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="text" @click="cancel">取消</el-button>
@@ -65,12 +46,17 @@
     </el-dialog>
         <!--表格渲染-->
         <el-table v-loading="loading" :data="data" style="width: 100%;">
-          <el-table-column :show-overflow-tooltip="true" prop="username" style="width: 15%;" label="姓名" />
-          <el-table-column :show-overflow-tooltip="true" prop="phone" style="width: 15%;" label="电话" />
-          <el-table-column :show-overflow-tooltip="true" prop="enterName" style="width: 20%;" label="企业全称" />
+          <el-table-column :show-overflow-tooltip="true" prop="username" min-width="32%" label="姓名" />
+          <el-table-column :show-overflow-tooltip="true" prop="phone"  min-width="32%" label="电话" />
+          <!--<el-table-column :show-overflow-tooltip="true" prop="enterName" style="width: 20%;" label="企业全称" />
           <el-table-column :show-overflow-tooltip="true" prop="enterSn" style="width: 8%;" label="税务识别码"/>
-          <el-table-column :show-overflow-tooltip="true" prop="salesName" style="width: 12%;" label="供应商名称"/>
-          <el-table-column label="状态" width="80" align="center">
+          <el-table-column :show-overflow-tooltip="true" prop="salesName" style="width: 12%;" label="供应商名称"/>-->
+          <el-table-column :show-overflow-tooltip="true" prop="createTime" min-width="16%"  label="创建日期">
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.createTime) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="状态" min-width="10%"  align="center">
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.status == 1? true: false"
@@ -80,35 +66,10 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="VIP" width="80" align="center">
-            <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.isVip == 1? true: false"
-                active-color="#409EFF"
-                inactive-color="#F56C6C"
-                @change="changeVip(scope.row, scope.row.isVip)"
-              />
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="" style="width: 12%;" label="赊账额度（元）">
-            <template slot-scope="scope" v-if="scope.row.isVip">
-              <span>{{ scope.row.creditAmount }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" style="width: 12%;" label="账期（天）">
-            <template slot-scope="scope" v-if="scope.row.isVip">
-              <span>{{ scope.row.creditDays }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="createTime" style="width: 15%;" label="创建日期">
-            <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.createTime) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column v-if="checkPermission(['admin','enter:edit','enter:del'])" label="操作" style="width: 15%;" align="center" fixed="right">
+         <!-- <el-table-column v-if="checkPermission(['admin','enter:edit','enter:del'])" label="操作" min-width="10%"  align="center" fixed="right">
             <template slot-scope="scope">
               <el-button size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
-              <!--<el-popover
+              &lt;!&ndash;<el-popover
                 :ref="scope.row.id"
                 placement="top"
                 width="180"
@@ -119,9 +80,9 @@
                   <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定</el-button>
                 </div>
                 <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
-              </el-popover>-->
+              </el-popover>&ndash;&gt;
             </template>
-          </el-table-column>
+          </el-table-column>-->
         </el-table>
         <!--分页组件-->
         <el-pagination
@@ -139,7 +100,7 @@
 import crud from '@/mixins/crud'
 import crudEnterprise from '@/api/system/enterprise'
 export default {
-  name: 'EnterPrise',
+  name: 'Personal',
   mixins: [crud],
   // 数据字典
   dicts: ['user_status'],
@@ -172,7 +133,7 @@ export default {
   },
   methods: {
     beforeInit() {
-      this.url = 'api/enterprise?sourceType=1'
+      this.url = 'api/enterprise?sourceType=2'
       return true
     },
     // 打开新增弹窗前做的操作
@@ -208,42 +169,6 @@ export default {
         })
       }).catch(() => {
         data.status = !data.status
-      })
-    },
-    changeVip(data, val) {
-      if (val) {
-        val = false
-      } else {
-        val = true
-      }
-      let text
-      if (val) {
-        text = '此操作将设置 ' + data.enterName + '及其员工 为VIP, 是否继续？'
-      } else {
-        text = '此操作将取消 ' + data.enterName + '及其员工 的VIP资格, 是否继续？'
-      }
-
-      this.$confirm(text, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        if (!data.isVip) {
-          data.isVip = true
-        } else {
-          data.isVip = false
-        }
-        this.crudMethod.edit(data).then(res => {
-          this.notify('VIP设置成功', 'success')
-        }).catch(() => {
-          if (!data.isVip) {
-            data.isVip = true
-          } else {
-            data.isVip = false
-          }
-        })
-      }).catch(() => {
-
       })
     }
   }

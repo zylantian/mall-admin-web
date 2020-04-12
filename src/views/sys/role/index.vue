@@ -77,12 +77,12 @@
             </el-table-column>
             <el-table-column  label="操作" width="130px" align="center" fixed="right">
               <template slot-scope="scope">
-                <el-button v-if="scope.row.id > 4" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
+                <el-button v-if="scope.row.id > 6" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
                 <el-popover
                   :ref="scope.row.id"
                   placement="top"
                   width="180"
-                  v-if="scope.row.id > 4"
+                  v-if="scope.row.id > 6"
                 >
                   <p>确定删除本条数据吗？</p>
                   <div style="text-align: right; margin: 0">
@@ -190,9 +190,11 @@ export default {
         this.getDepts()
       }
       const depts = []
-      data.depts.forEach(function(dept, index) {
-        depts.push(dept.id)
-      })
+      if (data.depts != null) {
+        data.depts.forEach(function(dept, index) {
+          depts.push(dept.id)
+        })
+      }
       this.form.depts = depts
     },
     // 提交前做的操作
@@ -254,6 +256,8 @@ export default {
       this.crudMethod.editMenu(role).then(res => {
         this.notify('保存成功', 'success')
         this.menuLoading = false
+        this.getMenus()
+        this.init()
         this.update()
       }).catch(err => {
         this.menuLoading = false
