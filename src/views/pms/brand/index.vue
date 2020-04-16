@@ -201,10 +201,8 @@
         });
       },
       getProductList(index, row) {
-        console.log(index, row);
       },
       getProductCommentList(index, row) {
-        console.log(index, row);
       },
       handleFactoryStatusChange(index, row) {
         var data = new URLSearchParams();
@@ -257,7 +255,6 @@
         this.getList();
       },
       handleBatchOperate() {
-        console.log(this.multipleSelection);
         if (this.multipleSelection < 1) {
           this.$message({
             message: '请选择一条记录',

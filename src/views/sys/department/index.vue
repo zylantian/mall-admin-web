@@ -36,14 +36,14 @@
         @click="showAddFormDialog"
       >新增</el-button>
       <!-- 导出 -->
-      <el-button
+      <!--<el-button
         :loading="downloadLoading"
         size="mini"
         class="filter-item"
         type="warning"
         icon="el-icon-download"
         @click="downloadMethod"
-      >导出</el-button>
+      >导出</el-button>-->
     </div>
     <!--表单组件-->
     <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="getFormTitle()" width="500px">

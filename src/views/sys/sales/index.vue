@@ -33,14 +33,14 @@
         @click="showAddFormDialog"
       >新增</el-button>
       <!-- 导出 -->
-      <el-button
+      <!--<el-button
         :loading="downloadLoading"
         size="mini"
         class="filter-item"
         type="warning"
         icon="el-icon-download"
         @click="downloadMethod"
-      >导出</el-button>
+      >导出</el-button>-->
     </div>
     <!--表单组件-->
     <el-dialog :append-to-body="true" :close-on-click-modal="false" :before-close="cancel" :visible.sync="dialog" :title="getFormTitle()" width="530px">
@@ -67,9 +67,9 @@
           <el-input v-model="form.managerPhone" style="width: 370px;" />
         </el-form-item>
         <el-form-item label="类型" >
-          <el-radio  v-model="form.type" :label="2">经销商</el-radio>
-          <el-radio  v-model="form.type" :label="3">分仓</el-radio>
-          <el-radio  v-model="form.type" :label="4">总仓</el-radio>
+          <el-radio  v-model="form.type" v-if="currentDeptType == 1"  :label="2">经销商</el-radio>
+          <el-radio  v-model="form.type" v-if="currentDeptType == 1" :label="3">分仓</el-radio>
+          <el-radio  v-model="form.type" v-if="currentDeptType == -1" :label="4">总仓</el-radio>
         </el-form-item>
         <el-form-item v-if="form.type != 0"  label="区域" >
           <v-region @values="regionChange" v-model="form.region"></v-region>
@@ -159,6 +159,7 @@
   import '@riophae/vue-treeselect/dist/vue-treeselect.css';
   import MultiUpload from '@/components/Upload/multiUpload'
   import SingleUpload from '@/components/Upload/singleUpload'
+  import {getCurrentDept} from '@/api/system/dept'
   export default {
     name: 'Dept',
     components: { Treeselect, MultiUpload, SingleUpload},
@@ -188,11 +189,22 @@
         enabledTypeOptions: [
           { key: 'true', display_name: '正常' },
           { key: 'false', display_name: '禁用' }
-        ]
+        ],
+        currentDeptType: null
       }
     },
     created() {
       this.$nextTick(() => {
+        getCurrentDept().then(res => {
+          if (res.code == 200) {
+            this.currentDeptType = res.data.type
+            if (this.currentDeptType == -1) {
+              this.form.type = 4
+            } else {
+              this.form.type = 3
+            }
+          }
+        })
         this.init()
       })
     },

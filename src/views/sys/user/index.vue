@@ -36,7 +36,6 @@
             type="primary"
             icon="el-icon-plus"
             @click="showAddFormDialog"
-            v-if="currentRole != 2"
           >新增</el-button>
           <!-- 导出 -->
           <!--<el-button
@@ -49,33 +48,33 @@
           >导出</el-button>-->
         </div>
         <!--表单渲染-->
-        <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="670px">
-          <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
+        <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="570px">
+          <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="100px">
             <el-form-item label="用户名" prop="username">
-              <el-input v-model="form.username" />
+              <el-input v-model="form.username"  style="width: 200px" />
             </el-form-item>
             <el-form-item label="电话" prop="phone">
-              <el-input v-model.number="form.phone" />
+              <el-input v-model="form.phone" type="text" style="width: 200px" />
             </el-form-item>
             <el-form-item v-if="isAdd" label="密码" prop="password">
-              <el-input type="password" v-model="form.password" />
+              <el-input type="password" v-model="form.password" style="width: 200px" />
             </el-form-item>
-            <el-form-item label="昵称" prop="nickName">
+            <!--<el-form-item label="昵称" prop="nickName">
               <el-input v-model="form.nickName" />
-            </el-form-item>
+            </el-form-item>-->
             <!--<el-form-item label="邮箱" prop="email">
               <el-input v-model="form.email" />
             </el-form-item>-->
             <el-form-item label="部门" prop="dept.id" v-if="currentRole < 3 && isAdd">
-              <treeselect v-model="form.dept.id" :options="depts" style="width: 178px" placeholder="选择部门" @select="selectFun" />
+              <treeselect v-model="form.dept.id" :options="depts" style="width: 337px" placeholder="选择部门" @select="selectFun" />
             </el-form-item>
-            <el-form-item label="状态" v-if="isAdd">
+            <!--<el-form-item label="状态" v-if="isAdd">
               <el-radio-group v-model="form.status">
                 <el-radio v-for="item in dict.user_status" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
               </el-radio-group>
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item style="margin-bottom: 0;" label="角色" prop="roles" v-if="isAdd">
-              <el-select v-model="form.tempRole" style="width: 437px" placeholder="请选择">
+              <el-select v-model="form.tempRole" style="width: 337px" placeholder="请选择">
                 <el-option
                   v-for="item in roles"
                   :key="item.name"
@@ -94,7 +93,6 @@
         <!--表格渲染-->
         <el-table v-loading="loading" :data="data" style="width: 100%;">
           <el-table-column :show-overflow-tooltip="true" prop="username" label="用户名" />
-          <el-table-column :show-overflow-tooltip="true" prop="nickName" label="昵称" />
           <el-table-column :show-overflow-tooltip="true" prop="phone" width="120" label="电话" />
           <!--<el-table-column :show-overflow-tooltip="true" width="135" prop="email" label="邮箱" />-->
           <el-table-column :show-overflow-tooltip="true" width="120" label="角色">

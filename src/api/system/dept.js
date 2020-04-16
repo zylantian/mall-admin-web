@@ -31,4 +31,11 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del, getDepts }
+export function getCurrentDept() {
+  return request({
+    url: 'api/dept/current',
+    method: 'get'
+  })
+}
+
+export default { add, edit, del, getDepts, getCurrentDept }

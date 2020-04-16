@@ -69,20 +69,20 @@
           <el-table v-loading="loading" :data="data" highlight-current-row style="width: 100%;" @current-change="handleCurrentChange">
             <el-table-column prop="name" label="名称" />
             <el-table-column prop="dataScope" label="数据权限" />
-            <el-table-column :show-overflow-tooltip="true" prop="remark" label="描述" />
-            <el-table-column :show-overflow-tooltip="true" width="135px" prop="createTime" label="创建日期">
+            <!--<el-table-column :show-overflow-tooltip="true" prop="remark" label="描述" />-->
+            <el-table-column :show-overflow-tooltip="true" prop="createTime" label="创建日期">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.createTime) }}</span>
               </template>
             </el-table-column>
-            <el-table-column  label="操作" width="130px" align="center" fixed="right">
+            <!--<el-table-column  label="操作" width="130px" align="center" fixed="right">
               <template slot-scope="scope">
                 <el-button v-if="scope.row.id > 6" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
                 <el-popover
                   :ref="scope.row.id"
                   placement="top"
                   width="180"
-                  v-if="scope.row.id > 6"
+                  v-if="scope.row.id > 10"
                 >
                   <p>确定删除本条数据吗？</p>
                   <div style="text-align: right; margin: 0">
@@ -92,7 +92,7 @@
                   <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini" />
                 </el-popover>
               </template>
-            </el-table-column>
+            </el-table-column>-->
           </el-table>
           <!--分页组件-->
           <el-pagination

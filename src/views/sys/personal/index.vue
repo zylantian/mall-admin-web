@@ -20,14 +20,14 @@
           </el-select>
           <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
           <!-- 导出 -->
-          <el-button
+          <!--<el-button
             :loading="downloadLoading"
             size="mini"
             class="filter-item"
             type="warning"
             icon="el-icon-download"
             @click="downloadMethod"
-          >导出</el-button>
+          >导出</el-button>-->
         </div>
     <!--表单渲染-->
     <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :before-close="cancel" :title="getFormTitle()" append-to-body width="670px">

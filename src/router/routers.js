@@ -216,6 +216,49 @@ export const constantRouterMap = [
     ]
   },
   {
+    path: '/stock',
+    component: Layout,
+    redirect: '/stock/stockOrderList',
+    name: 'oms',
+    meta: {title: '进销存管理', icon: 'order'},
+    children: [
+      {
+        path: 'stockOrderList',
+        name: 'stockOrderList',
+        component: () => import('@/views/stock/order/index'),
+        meta: {title: '调拨单列表', icon: 'product-list'}
+      },
+      {
+        path: 'addStockOrder',
+        name: 'addStockOrder',
+        component: () => import('@/views/stock/order/add'),
+        meta: {title: '新增调拨单', icon: 'product-list'},
+        hidden: true
+      },
+      {
+        path: 'stockOrderDetail',
+        name: 'stockOrderDetail',
+        component: () => import('@/views/stock/order/detail'),
+        meta: {title: '调拨单详情', icon: 'product-list'},
+        hidden: true
+      },
+      {
+        path: 'addDelivery',
+        name: 'addDelivery',
+        component: () => import('@/views/stock/order/delivery'),
+        meta: {title: '新增发货单', icon: 'product-list'},
+        hidden: true
+      },
+      {
+        path: 'deliveryDetail',
+        name: 'deliveryDetail',
+        component: () => import('@/views/stock/order/deliveryDetail'),
+        meta: {title: '发货单详情', icon: 'product-list'},
+        hidden: true
+      }
+    ]
+  },
+  {
     path: '/redirect',
     component: Layout,
     hidden: true,

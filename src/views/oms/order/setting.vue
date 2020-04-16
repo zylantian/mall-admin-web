@@ -66,7 +66,6 @@
     if (!value) {
       return callback(new Error('时间不能为空'));
     }
-    console.log("checkTime",value);
     let intValue = parseInt(value);
     if (!Number.isInteger(intValue)) {
       return callback(new Error('请输入数字值'));

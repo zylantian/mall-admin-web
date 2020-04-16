@@ -263,7 +263,6 @@
         }
       },
       currentAddress() {
-        console.log("currentAddress()");
         let id = this.updateStatusParam.companyAddressId;
         if(this.companyAddressList==null)return {};
         for (let i = 0; i < this.companyAddressList.length; i++) {
@@ -309,7 +308,6 @@
       },
       getDetail() {
         getApplyDetail(this.id).then(response => {
-          console.log("getDetail")
           this.orderReturnApply = response.data;
           this.productList = [];
           this.productList.push(this.orderReturnApply);
@@ -326,7 +324,6 @@
       },
       getCompanyAddressList() {
         fetchList().then(response => {
-          console.log("getCompanyAddressList()")
           this.companyAddressList = response.data;
           for (let i = 0; i < this.companyAddressList.length; i++) {
             if (this.companyAddressList[i].receiveStatus === 1&&this.orderReturnApply.status===0) {
