@@ -226,13 +226,20 @@ export const constantRouterMap = [
         path: 'stockOrderList',
         name: 'stockOrderList',
         component: () => import('@/views/stock/order/index'),
-        meta: {title: '调拨单列表', icon: 'product-list'}
+        meta: {title: '进销存管理', icon: 'product-list'}
       },
       {
         path: 'addStockOrder',
         name: 'addStockOrder',
         component: () => import('@/views/stock/order/add'),
         meta: {title: '新增调拨单', icon: 'product-list'},
+        hidden: true
+      },
+      {
+        path: 'insertStockOrder',
+        name: 'insertStockOrder',
+        component: () => import('@/views/stock/order/insert'),
+        meta: {title: '新增入库单', icon: 'product-list'},
         hidden: true
       },
       {

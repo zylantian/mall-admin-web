@@ -4,12 +4,19 @@
       <div>
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
-        <el-button
+        <el-button v-if="currentDept.type == 2 || currentDept.type == 3"
           style="float:right"
           type="primary"
           @click="transform()"
           size="small">
           新增调拨单
+        </el-button>
+        <el-button v-if="currentDept.type == 4"
+                   style="float:right"
+                   type="primary"
+                   @click="insertStock()"
+                   size="small">
+          新增入库单
         </el-button>
         <el-button
           style="float:right;margin-right: 15px"
@@ -54,6 +61,15 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="调拨类型：">
+            <el-select v-model="listQuery.type" class="input-width" placeholder="全部" clearable>
+              <el-option v-for="item in typeOptions"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       </div>
     </el-card>
@@ -70,25 +86,27 @@
         <el-table-column label="编号" min-width="5%" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>-->
-        <el-table-column label="单据编号" min-width="17%" align="center">
+        <el-table-column label="单据编号" :show-overflow-tooltip="true" min-width="12%" align="center">
           <template slot-scope="scope">{{scope.row.documentSn}}</template>
         </el-table-column>
-        <el-table-column label="提交时间" min-width="15%" align="center">
+        <el-table-column label="提交时间" :show-overflow-tooltip="true" min-width="10%" align="center">
           <template slot-scope="scope">{{scope.row.createdAt | formatCreateTime}}</template>
         </el-table-column>
-        <el-table-column label="商品种类数量" min-width="12%"  align="center">
-          <template slot-scope="scope">{{scope.row.productTypeNum}}</template>
-        </el-table-column>
-        <el-table-column label="商品数量" min-width="15%" align="center">
-          <template slot-scope="scope">{{scope.row.productNum}}</template>
-        </el-table-column>
-        <el-table-column label="调拨类型" min-width="12%" align="center">
+        <el-table-column label="源仓库" min-width="15%"  :show-overflow-tooltip="true"  prop="srcWarehouseName" align="center"></el-table-column>
+        <el-table-column label="目的仓库" min-width="15%" :show-overflow-tooltip="true"  prop="destWarehouseName" align="center"></el-table-column>
+        <el-table-column label="调拨类型" min-width="8%" align="center">
           <template slot-scope="scope">{{scope.row.type | formatType}}</template>
         </el-table-column>
-        <el-table-column label="状态" min-width="10%" align="center">
+        <el-table-column label="商品种类数量" min-width="8%"  align="center">
+          <template slot-scope="scope">{{scope.row.productTypeNum}}</template>
+        </el-table-column>
+        <el-table-column label="商品数量" min-width="10%" align="center">
+          <template slot-scope="scope">{{scope.row.productNum}}</template>
+        </el-table-column>
+        <el-table-column label="状态" min-width="8%" align="center">
           <template slot-scope="scope">{{scope.row.status | formatStatus}}</template>
         </el-table-column>
-        <el-table-column label="操作" min-width="19%" align="center">
+        <el-table-column label="操作" min-width="14%" align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -134,7 +152,8 @@
     pageSize: 10,
     status: null,
     createdAt: null,
-    sort: 'createdAt,desc'
+    sort: 'createdAt,desc',
+    type: null
   };
   export default {
     name: "stockOrderList",
@@ -170,7 +189,21 @@
             value: 6
           }
         ],
-        currentDept: null
+        typeOptions: [
+          {
+            label: '调拨',
+            value: 1
+          },
+          {
+            label: '反调拨',
+            value: 2
+          },
+          {
+            label: '总仓入库',
+            value: 3
+          }
+        ],
+        currentDept: {}
       }
     },
     created() {
@@ -214,6 +247,9 @@
     methods: {
       transform() {
         this.$router.push({path:'/stock/addStockOrder'})
+      },
+      insertStock() {
+        this.$router.push({path:'/stock/insertStockOrder'})
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);

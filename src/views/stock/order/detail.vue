@@ -23,27 +23,29 @@
                 </el-select>
               </template>
             </el-table-column>
-            <el-table-column label="商品数量">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.productNum" :disabled="true" type="number" min="1"></el-input>
-              </template>
+            <el-table-column label="商品数量" prop="productNum">
+              <!--<template slot-scope="scope">
+                <el-input v-model="scope.row.productNum" v-bind:readonly="readonly" type="number" min="1"></el-input>
+              </template>-->
             </el-table-column>
           </el-table>
           <el-form :inline="true" style="margin-top: 40px" :model="stockDto" size="small" label-width="140px">
             <el-row>
               <el-form-item label="单据编号：">
-                <el-input v-model="stockDto.documentSn" :disabled="true" style="width: 300px"></el-input>
+                <div >{{stockDto.documentSn}}</div>
+                <!--<el-input v-model="stockDto.documentSn" v-bind:readonly="true" style="width: 300px"></el-input>-->
               </el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="调拨类型：">
-                <el-radio v-model="stockDto.type" :disabled="true" :label="1">调拨</el-radio>
-                <el-radio v-model="stockDto.type" :disabled="true" :label="2">反调拨</el-radio>
+                <el-radio v-model="stockDto.type" v-bind:readonly="true" :label="1">调拨</el-radio>
+                <el-radio v-model="stockDto.type" v-bind:readonly="true" :label="2">反调拨</el-radio>
+                <el-radio v-model="stockDto.type" v-bind:readonly="true" :label="3">总仓入库</el-radio>
               </el-form-item>
             </el-row>
             <el-row v-if="stockDto.status == 6">
               <el-form-item label="拒绝原因：">
-                <el-input v-model="stockDto.failReason" style="width: 300px"></el-input>
+                <div >{{stockDto.failReason}}</div>
               </el-form-item>
             </el-row>
           </el-form>
@@ -62,7 +64,7 @@
             </div>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane name="second" v-if="stockDto.status == 4 || stockDto.stockDto == 5 || stockDto.stockDto == 8">
+        <el-tab-pane name="second" v-if="(stockDto.status == 4 || stockDto.status == 5 || stockDto.status == 8) && stockDto.type != 3">
           <template slot="label">
             <p>发货详情</p>
           </template>
@@ -153,6 +155,7 @@
               type: 'success',
               duration: 1000
             });
+            this.$router.push({path:'/stock/stockOrderList'})
           }
         })
       },
