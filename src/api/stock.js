@@ -53,3 +53,11 @@ export function deliveryConfirm(data) {
     data: data
   })
 }
+
+
+export function fetchProductList(id) {
+  return request({
+    url: '/stock/'+ id+ '/product/list',
+    method: 'get'
+  })
+}

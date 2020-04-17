@@ -92,7 +92,7 @@
     promotionPrice: null,
     promotionStartTime: '',
     promotionType: 0,
-    publishStatus: 0,
+    publishStatus: 1,
     recommandStatus: 0,
     sale: 0,
     serviceIds: '',

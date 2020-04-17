@@ -7,6 +7,14 @@ export function fetchList(params) {
   })
 }
 
+export function fetchSelfList(params) {
+  return request({
+    url:'/product/list/self',
+    method:'get',
+    params:params
+  })
+}
+
 export function fetchSimpleList(params) {
   return request({
     url:'/product/simpleList',

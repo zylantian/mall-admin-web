@@ -72,12 +72,11 @@
   </div>
 </template>
 <script>
-  import {fetchList} from '@/api/product'
-  import {delivery} from '@/api/stock'
+  import {delivery, fetchProductList} from '@/api/stock'
   const defaultLogisticsCompanies=["顺丰快递","圆通快递","中通快递","韵达快递"];
 
   export default {
-    name: "addStockOrder",
+    name: "addDeliveryOrder",
     data() {
       return {
         list: [{productId: null, productNum: 1}],
@@ -90,14 +89,9 @@
     created() {
       this.stockDto = JSON.parse(this.$route.query.stock)
       this.$nextTick(() => {
-        let param = {
-          publishStatus: 1,
-          pageSize: 100,
-          pageNum: 0
-        }
-        fetchList(param).then(res => {
+        fetchProductList(this.stockDto.id).then(res => {
           if (res.code == 200) {
-            this.productList = res.data.list
+            this.productList = res.data
           }
         })
       })

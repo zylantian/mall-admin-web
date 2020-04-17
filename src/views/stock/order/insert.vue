@@ -54,7 +54,7 @@
   </div>
 </template>
 <script>
-  import {fetchList} from '@/api/product'
+  import {fetchSelfList} from '@/api/product'
   import {addOrder} from '@/api/stock'
   export default {
     name: "insertStockOrder",
@@ -72,7 +72,7 @@
           pageSize: 100,
           pageNum: 0
         }
-        fetchList(param).then(res => {
+        fetchSelfList(param).then(res => {
           if (res.code == 200) {
             this.productList = res.data.list
           }

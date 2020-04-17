@@ -12,7 +12,7 @@
                     :row-class-name="tableRowClassName"
                     border>
 
-            <el-table-column label="商品名称"  align="center">
+            <el-table-column label="商品名称" min-width="50%" align="center">
               <template slot-scope="scope">
                 <el-select v-model="scope.row.productId" :disabled="true" class="input-width" placeholder="全部" clearable>
                   <el-option v-for="item in productList"
@@ -23,7 +23,9 @@
                 </el-select>
               </template>
             </el-table-column>
-            <el-table-column label="商品数量" prop="productNum">
+            <el-table-column label="商品库存" min-width="25%" align="center" prop="stockNum">
+            </el-table-column>
+            <el-table-column label="申请数量" min-width="25%" prop="productNum">
               <!--<template slot-scope="scope">
                 <el-input v-model="scope.row.productNum" v-bind:readonly="readonly" type="number" min="1"></el-input>
               </template>-->

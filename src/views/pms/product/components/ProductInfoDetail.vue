@@ -42,7 +42,7 @@
       <el-form-item label="市场价：">
         <el-input v-model="value.originalPrice"></el-input>
       </el-form-item>
-      <el-form-item label="商品库存：">
+      <el-form-item label="商品初始库存：">
         <el-input v-model="value.stock"></el-input>
       </el-form-item>
       <el-form-item label="计量单位：">

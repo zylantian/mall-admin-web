@@ -130,14 +130,17 @@
             </p>-->
           </template>
         </el-table-column>
-        <el-table-column label="排序" width="100" align="center">
+        <!--<el-table-column label="排序" width="100" align="center">
           <template slot-scope="scope">{{scope.row.sort}}</template>
+        </el-table-column>-->
+        <el-table-column label="剩余库存" width="100" align="center">
+          <template slot-scope="scope">{{scope.row.stock}}</template>
         </el-table-column>
-        <el-table-column label="SKU库存" width="100" align="center">
+        <!--<el-table-column label="SKU库存" width="100" align="center">
           <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-edit" @click="handleShowSkuEditDialog(scope.$index, scope.row)" circle></el-button>
           </template>
-        </el-table-column>
+        </el-table-column>-->
         <el-table-column label="销量" width="100" align="center">
           <template slot-scope="scope">{{scope.row.sale}}</template>
         </el-table-column>
@@ -649,8 +652,9 @@
             type: 'success',
             duration: 1000
           });
+          this.getList();
         });
-        this.getList();
+
       },
       hasFirstLevelPermission(row) {
         if (this.$store.state.user.deptType === 4 || this.$store.state.user.deptType === -1) {

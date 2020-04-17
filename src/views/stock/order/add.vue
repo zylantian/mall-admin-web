@@ -1,6 +1,6 @@
 <template> 
   <div class="app-container">
-
+    <div style="color: red" v-if="productEmpty">系统初始时，请从商品列表中编辑商品，这样才能把平台商品库的商品导入到自己库中,然后才能发起调拨</div>
     <div class="table-container">
       <el-table ref="orderTable"
                 :data="list"
@@ -60,7 +60,7 @@
   </div>
 </template>
 <script>
-  import {fetchList} from '@/api/product'
+  import {fetchSelfList} from '@/api/product'
   import {addOrder} from '@/api/stock'
   export default {
     name: "addStockOrder",
@@ -68,7 +68,8 @@
       return {
         list: [{productId: null, productNum: 1}],
         productList: [],
-        order: { type: 1, documentSn: null}
+        order: { type: 1, documentSn: null},
+        productEmpty: false
       }
     },
     created() {
@@ -78,9 +79,18 @@
           pageSize: 100,
           pageNum: 0
         }
-        fetchList(param).then(res => {
+        fetchSelfList(param).then(res => {
           if (res.code == 200) {
-            this.productList = res.data.list
+            if (res.data.list.length == 0) {
+              this.productEmpty = true
+              this.$message({
+                message: '请从商品列表中导入商品到自己的库中！',
+                type: 'warning',
+                duration: 800
+              })
+            } else {
+              this.productList = res.data.list
+            }
           }
         })
       })

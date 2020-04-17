@@ -187,6 +187,14 @@
           {
             label: '已拒绝',
             value: 6
+          },
+          {
+            label: '已取消',
+            value: 7
+          },
+          {
+            label: '待确认收货',
+            value: 8
           }
         ],
         typeOptions: [
@@ -239,6 +247,8 @@
           return '已完成';
         } else if (value === 7) {
           return '已取消';
+        } else if (value === 8) {
+          return '待确认收货';
         } else {
           return '已拒绝';
         }
