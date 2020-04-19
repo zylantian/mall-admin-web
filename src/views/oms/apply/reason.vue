@@ -83,7 +83,7 @@
       </el-pagination>
     </div>
     <el-dialog
-      title="添加退货原因"
+      title="添加换货原因"
       :visible.sync="dialogVisible" width="30%">
       <el-form :model="returnReason"
                ref="reasonForm" label-width="150px">

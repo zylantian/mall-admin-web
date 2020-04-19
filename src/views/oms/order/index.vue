@@ -89,7 +89,7 @@
           <template slot-scope="scope">{{scope.row.memberUsername}}</template>
         </el-table-column>
         <el-table-column label="订单金额" min-width="10%" align="center">
-          <template slot-scope="scope">￥{{scope.row.totalAmount}}</template>
+          <template slot-scope="scope">￥{{scope.row.payAmount}}</template>
         </el-table-column>
         <el-table-column label="支付方式" min-width="10%" align="center">
           <template slot-scope="scope">{{scope.row.payType | formatPayType}}</template>

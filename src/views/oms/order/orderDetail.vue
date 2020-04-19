@@ -1,5 +1,6 @@
 <template> 
   <div class="detail-container">
+    <el-button size="small" @click="$router.back()">返回</el-button>
     <div>
       <el-steps :active="formatStepStatus(order.status)" finish-status="success" align-center>
         <el-step title="提交订单" :description="formatTime(order.createTime)"></el-step>
@@ -348,7 +349,7 @@
         <el-button type="primary" @click="handleMarkOrder">确 定</el-button>
       </span>
     </el-dialog>
-    <logistics-dialog v-show="logisticsDialogVisible" v-model="logisticsDialogVisible" :deliverySn.sync="deliverySn"></logistics-dialog>
+    <logistics-dialog v-if="logisticsDialogVisible" v-model="logisticsDialogVisible" :deliverySn.sync="deliverySn"></logistics-dialog>
   </div>
 </template>
 <script>

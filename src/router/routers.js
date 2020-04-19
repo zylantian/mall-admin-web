@@ -197,20 +197,48 @@ export const constantRouterMap = [
         name: 'returnApply',
         component: () => import('@/views/oms/apply/index'),
         hidden: true,
-        meta: {title: '退货申请处理', icon: 'order-return'}
+        meta: {title: '换货申请处理', icon: 'order-return'}
       },
       {
         path: 'returnReason',
         name: 'returnReason',
         component: () => import('@/views/oms/apply/reason'),
         hidden: true,
-        meta: {title: '退货原因设置', icon: 'order-return-reason'}
+        meta: {title: '换货原因设置', icon: 'order-return-reason'}
       },
       {
         path: 'returnApplyDetail',
         name: 'returnApplyDetail',
         component: () => import('@/views/oms/apply/applyDetail'),
-        meta: {title: '退货原因详情'},
+        meta: {title: '换货原因详情'},
+        hidden:true
+      },
+      {
+        path: 'billList',
+        name: 'billList',
+        component: () => import('@/views/oms/bill/index'),
+        meta: {title: '发票审核', icon: 'product-list'},
+        hidden: true
+      },
+      {
+        path: 'billDetail',
+        name: 'billDetail',
+        component: () => import('@/views/oms/bill/detail'),
+        meta: {title: '发票详情'},
+        hidden:true
+      },
+      {
+        path: 'addBillDelivery',
+        name: 'addBillDelivery',
+        component: () => import('@/views/oms/bill/detail'),
+        meta: {title: '邮寄专票'},
+        hidden:true
+      },
+      {
+        path: 'billOrderList',
+        name: 'billOrderList',
+        component: () => import('@/views/oms/bill/orderList'),
+        meta: {title: '发票订单列表'},
         hidden:true
       }
     ]

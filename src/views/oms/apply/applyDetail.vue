@@ -75,7 +75,7 @@
           <el-col class="form-border font-small" :span="18">{{orderReturnApply.returnPhone}}</el-col>
         </el-row>
         <el-row>
-          <el-col class="form-border form-left-bg font-small" :span="6">退货原因</el-col>
+          <el-col class="form-border form-left-bg font-small" :span="6">换货原因</el-col>
           <el-col class="form-border font-small" :span="18">{{orderReturnApply.reason}}</el-col>
         </el-row>
         <el-row>
@@ -185,8 +185,8 @@
         </el-row>
       </div>
       <div style="margin-top:15px;text-align: center" v-show="orderReturnApply.status===0">
-        <el-button type="primary" size="small" @click="handleUpdateStatus(1)">确认退货</el-button>
-        <el-button type="danger" size="small" @click="handleUpdateStatus(3)">拒绝退货</el-button>
+        <el-button type="primary" size="small" @click="handleUpdateStatus(1)">确认换货</el-button>
+        <el-button type="danger" size="small" @click="handleUpdateStatus(3)">拒绝换货</el-button>
       </div>
       <div style="margin-top:15px;text-align: center" v-show="orderReturnApply.status===1">
         <el-button type="primary" size="small" @click="handleUpdateStatus(2)">确认收货</el-button>
@@ -279,7 +279,7 @@
         if (status === 0) {
           return "待处理";
         } else if (status === 1) {
-          return "退货中";
+          return "换货中";
         } else if (status === 2) {
           return "已完成";
         } else {
