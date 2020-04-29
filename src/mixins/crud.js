@@ -105,6 +105,10 @@ export default {
       this.page = 0
       this.init()
     },
+    resetQuery() {
+      this.query = {}
+      this.init()
+    },
     /**
      * 通用的提示封装
      */

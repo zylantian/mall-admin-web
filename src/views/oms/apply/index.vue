@@ -64,28 +64,25 @@
       <el-table ref="returnApplyTable"
                 :data="list"
                 style="width: 100%;"
-                @selection-change="handleSelectionChange"
                 v-loading="listLoading" border>
-        <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="服务单号" width="180" align="center">
-          <template slot-scope="scope">{{scope.row.id}}</template>
-        </el-table-column>
-        <el-table-column label="申请时间" width="180" align="center">
+        <el-table-column label="申请时间" min-width="12%" align="center">
           <template slot-scope="scope">{{scope.row.createTime | formatTime}}</template>
         </el-table-column>
-        <el-table-column label="用户账号" align="center">
-          <template slot-scope="scope">{{scope.row.memberUsername}}</template>
+        <el-table-column label="用户账号/手机号" min-width="25%" align="center">
+          <template slot-scope="scope">{{scope.row.memberUsername}} / {{scope.row.returnPhone}} </template>
         </el-table-column>
-        <el-table-column label="退款金额" width="180" align="center">
+        <el-table-column label="订单编号" min-width="22%" align="center" prop="orderSn">
+        </el-table-column>
+        <el-table-column label="订单金额" min-width="9%" align="center">
           <template slot-scope="scope">￥{{scope.row | formatReturnAmount}}</template>
         </el-table-column>
-        <el-table-column label="申请状态" width="180" align="center">
+        <el-table-column label="申请状态" min-width="10%" align="center">
           <template slot-scope="scope">{{scope.row.status | formatStatus}}</template>
         </el-table-column>
-        <el-table-column label="处理时间" width="180" align="center">
+        <el-table-column label="处理时间" min-width="12%" width="180" align="center">
           <template slot-scope="scope">{{scope.row.handleTime | formatTime}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" min-width="10%" align="center">
           <template slot-scope="scope">
             <el-button
             size="mini"

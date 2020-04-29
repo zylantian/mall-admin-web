@@ -86,7 +86,7 @@
           <el-col class="form-border form-left-bg font-small" :span="6" style="height:100px;line-height:80px">凭证图片
           </el-col>
           <el-col class="form-border font-small" :span="18" style="height:100px">
-            <img v-for="item in proofPics" style="width:80px;height:80px" :src="item">
+            <img v-for="item in proofPics" @click="privewPic(item)" style="width:80px;height:80px" :src="item">
           </el-col>
         </el-row>
       </div>
@@ -94,16 +94,6 @@
         <el-row>
           <el-col class="form-border form-left-bg font-small" :span="6">订单金额</el-col>
           <el-col class="form-border font-small" :span="18">￥{{totalAmount}}</el-col>
-        </el-row>
-        <el-row>
-          <el-col class="form-border form-left-bg font-small" :span="6" style="height:52px;line-height:32px">确认退款金额
-          </el-col>
-          <el-col class="form-border font-small" style="height:52px" :span="18">
-            ￥
-            <el-input size="small" v-model="updateStatusParam.returnAmount"
-                      :disabled="orderReturnApply.status!==0"
-                      style="width:200px;margin-left: 10px"></el-input>
-          </el-col>
         </el-row>
         <!--<div v-show="orderReturnApply.status!==3">
         <el-row>
@@ -150,54 +140,75 @@
           <el-col class="form-border font-small" :span="18">{{orderReturnApply.handleTime | formatTime}}</el-col>
         </el-row>
         <el-row>
-          <el-col class="form-border form-left-bg font-small" :span="6">处理备注</el-col>
-          <el-col class="form-border font-small" :span="18">{{orderReturnApply.handleNote}}</el-col>
-        </el-row>
-      </div>
-      <div class="form-container-border" v-show="orderReturnApply.status===2">
-        <el-row>
-          <el-col class="form-border form-left-bg font-small" :span="6">收货人员</el-col>
-          <el-col class="form-border font-small" :span="18">{{orderReturnApply.receiveMan}}</el-col>
+          <el-col class="form-border form-left-bg font-small" :span="6">物流公司</el-col>
+          <el-col class="form-border font-small" :span="18">{{orderReturnApply.deliveryCompany}}</el-col>
         </el-row>
         <el-row>
-          <el-col class="form-border form-left-bg font-small" :span="6" >收货时间</el-col>
-          <el-col class="form-border font-small" :span="18">{{orderReturnApply.receiveTime | formatTime}}</el-col>
+          <el-col class="form-border form-left-bg font-small" :span="6">物流单号</el-col>
+          <el-col class="form-border font-small" :span="18">{{orderReturnApply.deliverySn}}</el-col>
         </el-row>
         <el-row>
-          <el-col class="form-border form-left-bg font-small" :span="6">收货备注</el-col>
-          <el-col class="form-border font-small" :span="18">{{orderReturnApply.receiveNote}}</el-col>
+          <el-col class="form-border form-left-bg font-small" :span="6">发货人手机号</el-col>
+          <el-col class="form-border font-small" :span="18">{{orderReturnApply.deliveryPhone}}</el-col>
         </el-row>
       </div>
       <div class="form-container-border" v-show="orderReturnApply.status===0">
         <el-row>
-          <el-col class="form-border form-left-bg font-small" :span="6" style="height:52px;line-height:32px">处理备注</el-col>
+          <el-col class="form-border form-left-bg font-small" :span="6" >审批操作</el-col>
+          <el-col class="form-border font-small" :span="18">
+            <el-radio v-model="tempStatus"  :label="1">同意</el-radio>
+            <el-radio v-model="tempStatus"  :label="3">拒绝</el-radio>
+          </el-col>
+        </el-row>
+        <div v-if="tempStatus == 1">
+          <el-row >
+            <el-col  class="form-border form-left-bg font-small" style="height: 53px" :span="6">物流公司</el-col>
+            <el-col class="form-border font-small" :span="18">
+              <el-select placeholder="请选择物流公司"
+                         v-model="updateStatusParam.deliveryCompany"
+                         size="small">
+                <el-option v-for="item in companyOptions"
+                           :key="item"
+                           :label="item"
+                           :value="item">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col  class="form-border form-left-bg font-small" style="height: 61px" :span="6">物流单号</el-col>
+            <el-col class="form-border font-small" :span="18">
+              <el-input v-model="updateStatusParam.deliverySn"  style="width: 300px"></el-input>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col  class="form-border form-left-bg font-small" style="height: 61px" :span="6">发件人手机号码</el-col>
+            <el-col class="form-border font-small" :span="18">
+              <el-input v-model="updateStatusParam.deliveryPhone"  style="width: 300px"></el-input>
+            </el-col>
+          </el-row>
+        </div>
+        <el-row v-if="tempStatus == 3">
+          <el-col class="form-border form-left-bg font-small" :span="6" style="height:52px;line-height:32px">拒绝原因</el-col>
           <el-col class="form-border font-small" :span="18">
             <el-input  size="small" v-model="updateStatusParam.handleNote" style="width:200px;margin-left: 10px"></el-input>
           </el-col>
         </el-row>
       </div>
-      <div class="form-container-border" v-show="orderReturnApply.status===1">
-        <el-row>
-          <el-col class="form-border form-left-bg font-small" :span="6" style="height:52px;line-height:32px">收货备注</el-col>
-          <el-col class="form-border font-small" :span="18">
-            <el-input  size="small" v-model="updateStatusParam.receiveNote" style="width:200px;margin-left: 10px"></el-input>
-          </el-col>
-        </el-row>
-      </div>
       <div style="margin-top:15px;text-align: center" v-show="orderReturnApply.status===0">
-        <el-button type="primary" size="small" @click="handleUpdateStatus(1)">确认换货</el-button>
-        <el-button type="danger" size="small" @click="handleUpdateStatus(3)">拒绝换货</el-button>
-      </div>
-      <div style="margin-top:15px;text-align: center" v-show="orderReturnApply.status===1">
-        <el-button type="primary" size="small" @click="handleUpdateStatus(2)">确认收货</el-button>
+        <el-button type="primary" size="small" @click="handleUpdateStatus">确定</el-button>
       </div>
     </el-card>
+    <el-dialog :visible.sync="dialogVisible">
+      <img v-if="dialogImageUrl != null" width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
   </div>
 </template>
 <script>
   import {getApplyDetail,updateApplyStatus} from '@/api/returnApply';
   import {fetchList} from '@/api/companyAddress';
   import {formatDate} from '@/utils/date';
+  const defaultLogisticsCompanies=["顺丰快递","圆通快递","中通快递","韵达快递"];
 
   const defaultUpdateStatusParam = {
     companyAddressId: null,
@@ -206,7 +217,10 @@
     receiveMan: 'admin',
     receiveNote: null,
     returnAmount: 0,
-    status: 0
+    status: 0,
+    deliveryCompany: null,
+    deliverySn: null,
+    deliveryPhone: null
   };
   const defaultOrderReturnApply = {
     id: null,
@@ -235,7 +249,10 @@
     handleMan: null,
     receiveMan: null,
     receiveTime: null,
-    receiveNote: null
+    receiveNote: null,
+    deliveryCompany: null,
+    deliverySn: null,
+    deliveryPhone: null
   };
   export default {
     name: 'returnApplyDetail',
@@ -246,7 +263,11 @@
         productList: null,
         proofPics: null,
         updateStatusParam: Object.assign({}, defaultUpdateStatusParam),
-        companyAddressList: null
+        companyAddressList: null,
+        dialogVisible: false,
+        dialogImageUrl: null,
+        tempStatus: 1,
+        companyOptions:defaultLogisticsCompanies
       }
     },
     created() {
@@ -303,6 +324,10 @@
       }
     },
     methods: {
+      privewPic(pic) {
+        this.dialogImageUrl = pic
+        this.dialogVisible = true
+      },
       handleViewOrder(){
         this.$router.push({path:'/oms/orderDetail',query:{id:this.orderReturnApply.orderId}});
       },
@@ -332,8 +357,48 @@
           }
         });
       },
-      handleUpdateStatus(status){
-        this.updateStatusParam.status=status;
+      handleUpdateStatus(){
+        this.updateStatusParam.status=this.tempStatus;
+        if (this.tempStatus == 1) {
+
+          if (this.updateStatusParam.deliveryCompany == null || this.updateStatusParam.deliveryCompany == undefined || this.updateStatusParam.deliveryCompany == '') {
+            this.$message({
+              message: '物流公司必须选择',
+              type: 'warning',
+              duration: 1000
+            });
+            return false;
+          }
+
+          if (this.updateStatusParam.deliverySn == null || this.updateStatusParam.deliverySn == undefined || this.updateStatusParam.deliverySn == '') {
+            this.$message({
+              message: '物流单号必须输入',
+              type: 'warning',
+              duration: 1000
+            });
+            return false;
+          }
+
+          if (this.updateStatusParam.deliveryPhone == null || this.updateStatusParam.deliveryPhone == undefined || this.updateStatusParam.deliveryPhone == '') {
+            this.$message({
+              message: '发件人手机号码必须填写',
+              type: 'warning',
+              duration: 1000
+            });
+            return false;
+          }
+        } else {
+          if (this.updateStatusParam.handleNote == null || this.updateStatusParam.handleNote == undefined || this.updateStatusParam.handleNote == '') {
+            this.$message({
+              message: '拒绝时，原因必填',
+              type: 'warning',
+              duration: 1000
+            });
+            return false;
+          }
+        }
+
+
         this.$confirm('是否要进行此操作?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

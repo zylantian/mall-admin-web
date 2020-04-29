@@ -146,6 +146,20 @@ export const constantRouterMap = [
         component: () => import('@/views/pms/brand/update'),
         meta: {title: '编辑品牌'},
         hidden: true
+      },
+      {
+        path: 'regionList',
+        name: 'regionList',
+        component: () => import('@/views/pms/region/index'),
+        meta: {title: '商品区域价格列表'},
+        hidden: true
+      },
+      {
+        path: 'regionPrice',
+        name: 'regionPrice',
+        component: () => import('@/views/pms/region/add'),
+        meta: {title: '商品区域价格设定'},
+        hidden: true
       }
     ]
   },
@@ -289,6 +303,22 @@ export const constantRouterMap = [
         name: 'deliveryDetail',
         component: () => import('@/views/stock/order/deliveryDetail'),
         meta: {title: '发货单详情', icon: 'product-list'},
+        hidden: true
+      }
+    ]
+  },
+  {
+    path: '/sales',
+    component: Layout,
+    name: 'oms',
+    meta: {title: '商户管理', icon: 'sales'},
+    hidden: true,
+    children: [
+      {
+        path: 'regionlist',
+        name: 'regionList',
+        component: () => import('@/views/sys/sales/regionList'),
+        meta: {title: '商户区域列表', icon: 'product-list'},
         hidden: true
       }
     ]

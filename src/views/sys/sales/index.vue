@@ -71,8 +71,13 @@
           <el-radio  v-model="form.type" v-if="currentDeptType == 1" :label="3">分仓</el-radio>
           <el-radio  v-model="form.type" v-if="currentDeptType == -1" :label="4">总仓</el-radio>
         </el-form-item>
-        <el-form-item v-if="form.type != 0"  label="区域" >
-          <v-region @values="regionChange" v-model="form.region"></v-region>
+        <el-form-item v-if="form.type != 0 && isAdd"  label="区域" :required="true">
+          <el-cascader v-model="tempRegionList" style="width: 400px"
+                       :options="areaList"
+                       :props="{ checkStrictly: true , multiple: true}"
+                       clearable></el-cascader>
+
+          <!--<v-region @values="regionChange" v-model="form.regionList"></v-region>-->
         </el-form-item>
         <el-form-item label="三证合一" prop="pic">
           <single-upload v-model="form.pic"
@@ -103,9 +108,7 @@
       </el-table-column>
       <el-table-column label="所在区域">
         <template slot-scope="scope">
-          <div >
-            <span v-if="scope.row.provinceValue != undefined" >{{scope.row.provinceValue}} - {{scope.row.cityValue}} - {{scope.row.areaValue}}</span>
-          </div>
+          <el-button  size="mini" type="text" icon="el-icon-edit" @click="showRegionList(scope.row)" > 修改区域 </el-button>
         </template>
       </el-table-column>
       <!--<el-table-column label="状态" align="center">
@@ -160,6 +163,8 @@
   import MultiUpload from '@/components/Upload/multiUpload'
   import SingleUpload from '@/components/Upload/singleUpload'
   import {getCurrentDept} from '@/api/system/dept'
+  import areaList from "../region/area.js";
+
   export default {
     name: 'Dept',
     components: { Treeselect, MultiUpload, SingleUpload},
@@ -171,7 +176,7 @@
         title: '部门',
         crudMethod: { ...crudSales },
         depts: [],
-        form: { id: null, name: null, fullName: null,pic: null,bankUserName: null, bankAccount: null, bankName:'',managerPhone: null, managerName: null, pid: 1, enabled: 'true', type: 3, region: { province: '430000', city: '430400', area: '430408', town: ''}, regionText: {}, accountPeriod: 90 },
+        form: { id: null, name: null, fullName: null,pic: null,bankUserName: null, bankAccount: null, bankName:'',managerPhone: null, managerName: null, pid: 1, enabled: 'true', type: 3, region: { province: '430000', city: '430400', area: '430408', town: ''}, regionList: [], regionText: {}, accountPeriod: 90 },
         rules: {
           name: [
             { required: true, message: '请输入名称', trigger: 'blur' }
@@ -190,7 +195,9 @@
           { key: 'true', display_name: '正常' },
           { key: 'false', display_name: '禁用' }
         ],
-        currentDeptType: null
+        currentDeptType: null,
+        areaList: areaList,
+        tempRegionList: []
       }
     },
     created() {
@@ -209,6 +216,9 @@
       })
     },
     methods: {
+      showRegionList(obj) {
+        this.$router.push({ path: "/sales/regionlist" , query: {dept: JSON.stringify(obj)}})
+      },
       // 获取数据前设置好接口地址
       beforeInit() {
         this.url = 'api/sales'
@@ -216,6 +226,7 @@
       },
       // 打开新增弹窗前做的操作
       beforeShowAddForm() {
+        this.tempRegionList = []
         this.getDepts()
       },
       // 打开编辑弹窗前做的操作
@@ -232,6 +243,22 @@
           })
           return false
         }
+
+        if (this.tempRegionList == undefined || this.tempRegionList == null || this.tempRegionList.length ==0) {
+          this.$message({
+            message: '一定要选择一个区域',
+            type: 'warning'
+          })
+          return false
+        }
+        let regionList = []
+        this.tempRegionList.forEach(region => {
+          let temp = region[region.length - 1]
+          regionList.push(temp)
+        })
+
+        this.form.regionList = regionList
+
         return true
       },
       // 改变状态
