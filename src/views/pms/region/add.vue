@@ -19,7 +19,7 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="商品价格" min-width="15%">
+        <el-table-column label="入库价格" min-width="15%">
           <template slot-scope="scope">
             <span>{{scope.row.product.price}}</span>
            <!-- <el-input v-model="scope.row.product.price" type="number" min="1" > </el-input>-->

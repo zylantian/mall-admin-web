@@ -4,6 +4,13 @@
       <div>
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
+        <el-button  v-if="currentDept.type == 4 || currentDept.type == 2 || currentDept.type == 3"
+          style="float:right;margin-right: 15px"
+          class="btn-add"
+          @click="transform()"
+          size="mini">
+          新增商品区域价格设定
+        </el-button>
         <el-button
           style="float:right;margin-right: 15px"
           type="primary"
@@ -17,12 +24,7 @@
           size="small">
           重置
         </el-button>
-        <el-button
-          class="btn-add"
-          @click="transform()"
-          size="mini">
-          新增商品区域价格设定
-        </el-button>
+
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" size="small" label-width="140px">
@@ -38,16 +40,17 @@
               </el-option>
             </el-select>
           </el-form-item>
+
         </el-form>
       </div>
     </el-card>
     <div class="table-container">
-      <el-table ref="orderTable"
+      <el-table ref="table"
                 :data="data"
                 style="width: 100%;"
                 v-loading="loading" border>
         <el-table-column label="商品名称" min-width="15%"  :show-overflow-tooltip="true"  prop="productName" align="center"></el-table-column>
-        <el-table-column label="商户名" min-width="15%" :show-overflow-tooltip="true"  align="deptName"/>
+        <el-table-column label="商户名" min-width="15%" :show-overflow-tooltip="true"  prop="deptName" align="center"/>
         <el-table-column label="区域名称" min-width="15%"  :show-overflow-tooltip="true"  prop="regionName" align="center"></el-table-column>
         <el-table-column label="区域类型" min-width="15%" :show-overflow-tooltip="true"  align="center">
           <template  slot-scope="scope">
@@ -91,6 +94,8 @@
   import crud from '@/mixins/crud'
   import crudProductRegion from '@/api/productRegion'
   import areaList from "../../sys/region/area.js";
+  import {getCurrentDept} from '@/api/system/dept'
+
   export default {
     name: "deptRegionList",
     mixins: [crud],
@@ -116,12 +121,18 @@
         //dept: {},
         title: '覆盖区域',
         areaList: areaList,
-        form: {}
+        form: {},
+        currentDept: {}
       }
     },
     created() {
       //this.dept = JSON.parse(this.$route.query.dept)
       this.$nextTick(() => {
+        getCurrentDept().then(res => {
+          if (res.code == 200) {
+            this.currentDept = res.data
+          }
+        })
         this.init();
       }, 500)
     },
