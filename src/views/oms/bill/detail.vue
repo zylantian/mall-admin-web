@@ -52,7 +52,7 @@
               <img style="width:80px;height:80px" :src="bill.contractUrl">
             </el-col>-->
             <el-col class="form-border font-small" :span="18" style="height:100px">
-              <img v-for="item in proofPics" style="width:80px;height:80px" :src="item">
+              <img v-for="item in proofPics" style="width:80px;height:80px" @click="privewPic(item)" :src="item">
             </el-col>
           </el-row>
           <div v-if="bill.status == 1 || bill.status == 5 || bill.status == 6">
@@ -191,6 +191,9 @@
         <el-button type="primary" @click="delivery()" style="margin-top: 20px;margin-left: 300px">确定</el-button>
       </div>
     </el-card>
+    <el-dialog :visible.sync="dialogVisible">
+      <img v-if="dialogImageUrl != null" width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -209,7 +212,9 @@
          deliveryCompany: null,
          deliverySn: null,
          deliveryPhone: null,
-         companyOptions:defaultLogisticsCompanies
+         companyOptions:defaultLogisticsCompanies,
+         dialogVisible: false,
+         dialogImageUrl: null,
       }
     },
     created() {
@@ -258,6 +263,10 @@
       }
     },
     methods: {
+      privewPic(pic) {
+        this.dialogImageUrl = pic
+        this.dialogVisible = true
+      },
       handleViewOrder(orderIds){
         this.$router.push({path:'/oms/billOrderList',query:{ids: JSON.stringify(orderIds)}});
       },
