@@ -38,4 +38,12 @@ export function getCurrentDept() {
   })
 }
 
-export default { add, edit, del, getDepts, getCurrentDept }
+
+export function getRootDept() {
+  return request({
+    url: 'api/dept/root',
+    method: 'get'
+  })
+}
+
+export default { add, edit, del, getDepts, getCurrentDept , getRootDept}

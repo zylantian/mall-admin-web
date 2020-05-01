@@ -162,7 +162,7 @@
   import '@riophae/vue-treeselect/dist/vue-treeselect.css';
   import MultiUpload from '@/components/Upload/multiUpload'
   import SingleUpload from '@/components/Upload/singleUpload'
-  import {getCurrentDept} from '@/api/system/dept'
+  import {getRootDept} from '@/api/system/dept'
   import areaList from "../region/area.js";
 
   export default {
@@ -202,7 +202,7 @@
     },
     created() {
       this.$nextTick(() => {
-        getCurrentDept().then(res => {
+        getRootDept().then(res => {
           if (res.code == 200) {
             this.currentDeptType = res.data.type
             if (this.currentDeptType == -1) {

@@ -106,7 +106,7 @@
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.enabled"
-            :disabled="scope.row.id === 1"
+            :disabled="scope.row.id === 1 || scope.row.id === 42 || scope.row.id === 41 || scope.row.id === 43"
             active-color="#409EFF"
             inactive-color="#F56C6C"
             @change="changeEnabled(scope.row, scope.row.enabled,)"
@@ -120,7 +120,7 @@
       </el-table-column>
       <el-table-column  v-if="checkPermission(['admin','dept:edit','dept:del'])" label="操作" width="130px" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button  size="mini" type="primary" :disabled="scope.row.id === 1" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
+          <el-button  size="mini" type="primary" :disabled="scope.row.id === 1 || scope.row.id === 42 || scope.row.id === 41 || scope.row.id === 43" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
           <el-popover
             :ref="scope.row.id"
             placement="top"
@@ -131,7 +131,7 @@
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="delMethod(scope.row.id)">确定</el-button>
             </div>
-            <el-button slot="reference" :disabled="scope.row.id === 1" type="danger" icon="el-icon-delete" size="mini" />
+            <el-button slot="reference" :disabled="scope.row.id === 1 || scope.row.id === 42 || scope.row.id === 41 || scope.row.id === 43" type="danger" icon="el-icon-delete" size="mini" />
           </el-popover>
         </template>
       </el-table-column>

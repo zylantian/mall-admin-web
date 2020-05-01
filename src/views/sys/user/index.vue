@@ -197,9 +197,9 @@ export default {
     const validUsername = (rule, value, callback) => {
       if (!value) {
         callback(new Error('请输入用户名'))
-      } else if (!isvalidUsername(value)) {
+      } /*else if (!isvalidUsername(value)) {
         callback(new Error('请输入正确的用户名'))
-      } else {
+      }*/ else {
         callback()
       }
     }
@@ -247,6 +247,7 @@ export default {
   methods: {
     beforeInit() {
       this.url = 'api/users'
+      this.sort = "id,asc"
       return true
     },
     hasPermission(data) {

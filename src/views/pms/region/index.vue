@@ -8,7 +8,7 @@
           style="float:right;margin-right: 15px"
           class="btn-add"
           @click="transform()"
-          size="mini">
+          size="small">
           新增商品区域价格设定
         </el-button>
         <el-button
@@ -62,7 +62,7 @@
 
           <el-table-column label="操作" min-width="14%" align="center">
           <template slot-scope="scope">
-            <el-popover
+            <el-popover  v-if="currentDept.id == scope.row.deptId"
               :ref="scope.row.id"
               placement="top"
               width="180"

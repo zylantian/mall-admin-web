@@ -263,12 +263,14 @@ export const constantRouterMap = [
     redirect: '/stock/stockOrderList',
     name: 'oms',
     meta: {title: '进销存管理', icon: 'order'},
+    hidden: true,
     children: [
       {
         path: 'stockOrderList',
         name: 'stockOrderList',
         component: () => import('@/views/stock/order/index'),
-        meta: {title: '进销存管理', icon: 'product-list'}
+        meta: {title: '进销存管理', icon: 'product-list'},
+        hidden: true,
       },
       {
         path: 'addStockOrder',
