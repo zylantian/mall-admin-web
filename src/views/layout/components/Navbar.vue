@@ -2,6 +2,9 @@
   <el-menu class="navbar" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
+    <div class="name-container">
+      <span> 欢迎您： {{name}}</span>
+    </div>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
         <img :src="avatar" class="user-avatar">
@@ -39,7 +42,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'sidebar'
+      'sidebar',
+      'name'
     ])
   },
   data() {
@@ -75,6 +79,13 @@ export default {
     position: absolute;
     right: 90px;
     top: 16px;
+    color: red;
+  }
+  .name-container {
+    height: 50px;
+    display: inline-block;
+    position: absolute;
+    right: 95px;
     color: red;
   }
   .avatar-container {

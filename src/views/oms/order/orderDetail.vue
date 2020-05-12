@@ -18,7 +18,7 @@
         <span class="color-danger">当前订单状态：{{order.status | formatStatus}}</span>
         <div class="operate-button-container" v-show="order.status===0">
           <el-button size="mini" @click="showUpdateReceiverDialog">修改收货人信息</el-button>
-          <el-button size="mini">修改商品信息</el-button>
+          <!--<el-button size="mini">修改商品信息</el-button>-->
           <!--<el-button size="mini" @click="showUpdateMoneyDialog">修改费用信息</el-button>-->
           <!--<el-button size="mini" @click="showMessageDialog">发送站内信</el-button>-->
           <el-button size="mini" @click="showCloseOrderDialog">关闭订单</el-button>
@@ -45,6 +45,7 @@
         <span class="font-small">基本信息</span>
       </div>
       <div class="table-layout">
+
         <el-row>
           <el-col :span="6" class="table-cell-title">订单编号</el-col>
          <!-- <el-col :span="4" class="table-cell-title">发货单流水号</el-col>-->
@@ -66,15 +67,18 @@
           <el-col :span="6" class="table-cell-title">配送方式</el-col>
           <el-col :span="6" class="table-cell-title">物流单号</el-col>
           <el-col :span="6" class="table-cell-title">自动确认收货时间</el-col>
+          <el-col :span="6" class="table-cell-title">备注</el-col>
           <!--<el-col :span="4" class="table-cell-title">订单可得优币</el-col>
           <el-col :span="4" class="table-cell-title">订单可得成长值</el-col>-->
           <!--<el-col :span="4" class="table-cell-title">活动信息</el-col>-->
         </el-row>
         <el-row>
 
-          <el-col :span="6" class="table-cell">{{order.deliveryCompany | formatNull}}</el-col>
-          <el-col :span="6" class="table-cell">{{order.deliverySn | formatNull}}</el-col>
-          <el-col :span="6" class="table-cell">{{order.autoConfirmDay}}天</el-col>
+          <el-col :span="6" class="table-special-cell " >{{order.deliveryCompany | formatNull}}</el-col>
+          <el-col :span="6" class="table-special-cell " >{{order.deliverySn | formatNull}}</el-col>
+          <el-col :span="6" class="table-special-cell " >{{order.autoConfirmDay}}天</el-col>
+          <el-col :span="6" class="table-special-cell" >{{order.note}}</el-col>
+
           <!--<el-col :span="4" class="table-cell">{{order.integration}}</el-col>
           <el-col :span="4" class="table-cell">{{order.growth}}</el-col>
           <el-col :span="4" class="table-cell">
@@ -624,7 +628,8 @@
       showMarkOrderDialog(){
         this.markOrderDialogVisible=true;
         this.markInfo.id=this.id;
-        this.closeOrder.note=null;
+        this.markInfo.note = this.order.note
+        this.closeInfo.note=null;
       },
       handleMarkOrder(){
         this.$confirm('是否要备注订单?', '提示', {
@@ -695,6 +700,18 @@
     margin-top: 20px;
     border-left: 1px solid #DCDFE6;
     border-top: 1px solid #DCDFE6;
+  }
+
+  .table-special-cell {
+    height: 80px;
+    line-height: 20px;
+    border-right: 1px solid #DCDFE6;
+    border-bottom: 1px solid #DCDFE6;
+    padding: 10px;
+    font-size: 14px;
+    color: #606266;
+    text-align: center;
+    overflow: hidden;
   }
 
   .table-cell {

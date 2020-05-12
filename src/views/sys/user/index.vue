@@ -73,11 +73,11 @@
                 <el-radio v-for="item in dict.user_status" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
               </el-radio-group>
             </el-form-item>-->
-            <el-form-item style="margin-bottom: 0;" label="角色" prop="roles" v-if="isAdd">
+            <el-form-item style="margin-bottom: 0;" label="角色">
               <el-select v-model="form.tempRole" style="width: 337px" placeholder="请选择">
                 <el-option
-                  v-for="item in roles"
-                  :key="item.name"
+                  v-for="(item, idx) in roles"
+                  :key="idx"
                   :label="item.name"
                   :value="item.id"
                 />
@@ -109,7 +109,7 @@
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.status"
-                :disabled="scope.row.username === 'admin' || !hasPermission(scope.row) || isSelf(scope.row)"
+                :disabled="scope.row.username === 'admin' || !hasStatusPermission(scope.row) || isSelf(scope.row)"
                 active-color="#409EFF"
                 inactive-color="#F56C6C"
                 @change="changeEnabled(scope.row, scope.row.status)"
@@ -123,7 +123,7 @@
           </el-table-column>
           <el-table-column v-if="checkPermission(['admin','user:edit','user:del'])" label="操作" width="180" align="center" fixed="right">
             <template slot-scope="scope">
-              <el-button v-if="scope.row.username !== 'admin' && hasPermission(scope.row)" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
+              <el-button v-if="scope.row.username !== 'admin' && hasPermission(scope.row) && !isSelf(scope.row) && isSonRole(scope.row)" size="mini" type="primary" icon="el-icon-edit" @click="showEditFormDialog(scope.row)" />
               <el-popover
                 :ref="scope.row.username"
                 placement="top"
@@ -141,7 +141,7 @@
                 :ref="scope.row.id"
                 placement="top"
                 width="180"
-                v-if="scope.row.username !== 'admin' &&  hasPermission(scope.row) && !isSelf(scope.row)"
+                v-if="scope.row.username !== 'admin' &&  hasPermission(scope.row) && !isSelf(scope.row) && isSonRole(scope.row)"
               >
                 <p>确定删除本条数据吗？</p>
                 <div  style="text-align: right; margin: 0" >
@@ -216,7 +216,7 @@ export default {
         { key: 'true', display_name: '激活' },
         { key: 'false', display_name: '锁定' }
       ],
-      form: { username: null, nickName: null, password: '123456', email: null, status: 'true', roles: [], tempRole: null, dept: { id: null }, phone: null },
+      form: { username: null, nickName: null, password: '123456', email: null, status: 'true', roles: [], tempRole: null, roleId: null, dept: { id: null }, phone: null },
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' , validator: validUsername}
@@ -254,6 +254,16 @@ export default {
       let optLevel = data.roles[0].level
       return this.level <= optLevel
     },
+    hasStatusPermission(data) {
+      let optLevel = data.roles[0].level
+      return this.level < optLevel
+    },
+    isSonRole(data) {
+      let role = data.roles[0]
+      if (role.id == 3 || role.id == 11 || role.id == 7) return false
+      let optLevel = role.level
+      return this.currentRole == optLevel
+    },
     isSelf(data) {
       return this.currentUserId === data.id
     },
@@ -265,16 +275,18 @@ export default {
     },
     // 打开编辑弹窗前做的操作
     beforeShowEditForm(data) {
+      console.log(data)
       this.getDepts()
       this.getRoles()
 
       // this.getJobs(this.form.dept.id)
       this.form.status = data.status.toString()
-      const roles = []
+      /*let tempRoles = []
       data.roles.forEach(function(role, index) {
-        roles.push(role.id)
-      })
-      this.form.tempRole = roles[0]
+        tempRoles.push(role.id)
+      })*/
+      //this.form.tempRole = null
+      //this.form.tempRole = data.roles[0].id
     },
     // 提交前做的操作
     beforeSubmitMethod() {
@@ -285,13 +297,16 @@ export default {
             type: 'warning'
           })
           return false
-        } else if (this.form.tempRole == null || this.form.tempRole == undefined) {
+        } else if (this.isAdd && (this.form.tempRole == null || this.form.tempRole == undefined)) {
           this.$message({
             message: '角色不能为空',
             type: 'warning'
           })
           return false
         }
+
+      }
+      if (this.isAdd) {
         const roles = []
         // this.form.roles.forEach(function(data, index) {
         const role = { id: this.form.tempRole }
@@ -299,12 +314,16 @@ export default {
         // })
         this.form.roles = roles
       } else {
-        const roles = []
-        // this.form.roles.forEach(function(data, index) {
-        const role = { id: this.form.tempRole }
-        roles.push(role)
-        this.form.roles = roles
+        if (this.form.tempRole != null && this.form.tempRole != undefined) {
+          const roles = []
+          // this.form.roles.forEach(function(data, index) {
+          const role = { id: this.form.tempRole }
+          roles.push(role)
+          // })
+          this.form.roles = roles
+        }
       }
+
       return true
     },
     // 获取左侧部门数据

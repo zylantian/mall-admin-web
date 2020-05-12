@@ -20,7 +20,7 @@
           <el-col class="form-border form-left-bg font-small" :span="6">发票类型</el-col>
           <el-col class="form-border font-small" :span="18">{{bill.type | formatType}}</el-col>
         </el-row>
-        <div v-if="bill.type == 2">
+        <div>
           <el-row>
             <el-col class="form-border form-left-bg font-small" :span="6">单位名称</el-col>
             <el-col class="form-border font-small" :span="18">{{bill.enterName}}</el-col>
@@ -55,7 +55,7 @@
               <img v-for="item in proofPics" style="width:80px;height:80px" @click="privewPic(item)" :src="item">
             </el-col>
           </el-row>
-          <div v-if="bill.status == 1 || bill.status == 5 || bill.status == 6">
+          <div v-if="(bill.status == 1 || bill.status == 5 || bill.status == 6) && bill.type == 2">
             <el-row >
               <el-col class="form-border form-left-bg font-small" :span="6" >合同寄送物流公司
               </el-col>
@@ -70,6 +70,24 @@
               <el-col class="form-border form-left-bg font-small" :span="6" >合同寄送人手机号码
               </el-col>
               <el-col class="form-border font-small" :span="18">{{bill.contractDeliveryPhone}}</el-col>
+            </el-row>
+          </div>
+
+          <div v-if="bill.status == 5 && bill.redApply">
+            <el-row >
+              <el-col class="form-border form-left-bg font-small" :span="6" >原发票寄送物流公司
+              </el-col>
+              <el-col class="form-border font-small" :span="18">{{bill.originDeliveryCompany}}</el-col>
+            </el-row>
+            <el-row >
+              <el-col class="form-border form-left-bg font-small" :span="6" >合同寄送物流单号
+              </el-col>
+              <el-col class="form-border font-small" :span="18">{{bill.originDeliverySn}}</el-col>
+            </el-row>
+            <el-row >
+              <el-col class="form-border form-left-bg font-small" :span="6" >合同寄送人手机号码
+              </el-col>
+              <el-col class="form-border font-small" :span="18">{{bill.originDeliveryPhone}}</el-col>
             </el-row>
           </div>
 
@@ -111,14 +129,14 @@
               <el-col class="form-border form-left-bg font-small" :span="6">发票子类型</el-col>
               <el-col class="form-border font-small" :span="18">企业</el-col>
             </el-row>
-            <el-row>
+           <!-- <el-row>
               <el-col class="form-border form-left-bg font-small" :span="6">单位名称</el-col>
               <el-col class="form-border font-small" :span="18">{{bill.enterName}}</el-col>
             </el-row>
             <el-row>
               <el-col class="form-border form-left-bg font-small" :span="6">纳税号</el-col>
               <el-col class="form-border font-small" :span="18">{{bill.enterSn}}</el-col>
-            </el-row>
+            </el-row>-->
           </div>
           <el-row v-if="bill.paperType == 1 && (bill.pictureUrl != null && bill.pictureUrl != undefined)">
             <el-col class="form-border form-left-bg font-small" :span="6" style="height:100px;line-height:80px">电子普票
@@ -127,10 +145,15 @@
               <img style="width:80px;height:80px" :src="bill.pictureUrl">
             </el-col>
           </el-row>
+
         </div>
         <el-row>
+          <el-col class="form-border form-left-bg font-small" :span="6">备注</el-col>
+          <el-col class="form-border font-small" :span="18">{{bill.note}}</el-col>
+        </el-row>
+        <el-row>
           <el-col style="height:53px" class="form-border form-left-bg font-small" :span="6">订单汇总</el-col>
-          <el-col class="form-border font-small" :span="18">{{bill | formatOrder}}
+          <el-col class="form-border font-small" :span="18" style="height:53px">{{bill | formatOrder}}
             <el-button type="text" size="small" @click="handleViewOrder(bill.orderIds)">查看详情</el-button>
           </el-col>
         </el-row>
@@ -158,12 +181,13 @@
       </div>
     </el-card>
 
+
     <el-card shadow="never" v-if="bill.status == 5" class="standard-margin">
       <span class="font-title-medium">发票物流信息</span>
       <div class="form-container-border">
         <el-row>
           <el-col  class="form-border form-left-bg font-small" style="height: 53px" :span="6">物流公司</el-col>
-          <el-col class="form-border font-small" :span="18">
+          <el-col class="form-border font-small" style="height: 53px"  :span="18">
             <el-select placeholder="请选择物流公司"
                        v-model="deliveryCompany"
                        size="small">
@@ -177,13 +201,13 @@
         </el-row>
         <el-row>
           <el-col  class="form-border form-left-bg font-small" style="height: 61px" :span="6">物流单号</el-col>
-          <el-col class="form-border font-small" :span="18">
+          <el-col class="form-border font-small"  style="height: 61px" :span="18">
             <el-input v-model="deliverySn"  style="width: 300px"></el-input>
           </el-col>
         </el-row>
         <el-row>
           <el-col  class="form-border form-left-bg font-small" style="height: 61px" :span="6">寄件人手机号码</el-col>
-          <el-col class="form-border font-small" :span="18">
+          <el-col class="form-border font-small" style="height: 61px" :span="18">
             <el-input v-model="deliveryPhone"  style="width: 300px"></el-input>
           </el-col>
         </el-row>
@@ -384,6 +408,7 @@
     border-right: 1px solid #DCDFE6;
     border-bottom: 1px solid #DCDFE6;
     padding: 10px;
+    height: 31px;
   }
 
   .form-container-border {

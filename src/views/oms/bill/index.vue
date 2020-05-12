@@ -94,7 +94,7 @@
             <el-button
               size="mini"
               @click="handleViewOrder(scope.$index, scope.row)"
-              v-if="scope.row.status === 5">邮寄专票</el-button>
+              v-if="scope.row.status === 5">邮寄发票</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -151,11 +151,11 @@
             value: 4
           },
           {
-            label: '待专票邮寄',
+            label: '待发票邮寄',
             value: 5
           },
           {
-            label: '待确认收到专票',
+            label: '待确认收到发票',
             value: 6
           },
           {
@@ -207,9 +207,9 @@
         } else if (value === 4) {
           return '待合同邮寄';
         } else if (value === 5) {
-          return '待专票邮寄';
+          return '待发票邮寄';
         } else if (value === 6) {
-          return '待确认收到专票';
+          return '待确认收到发票';
         } else {
           return '已拒绝'
         }
