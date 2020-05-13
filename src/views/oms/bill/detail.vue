@@ -18,7 +18,7 @@
         </el-row>
         <el-row>
           <el-col class="form-border form-left-bg font-small" :span="6">发票类型</el-col>
-          <el-col class="form-border font-small" :span="18">{{bill.type | formatType}}</el-col>
+          <el-col class="form-border font-small" :span="18">{{bill | formatType}}</el-col>
         </el-row>
         <div>
           <el-row>
@@ -45,7 +45,7 @@
             <el-col class="form-border form-left-bg font-small" :span="6">开户银行账号</el-col>
             <el-col class="form-border font-small" :span="18">{{bill.bankNo}}</el-col>
           </el-row>
-          <el-row v-if="bill.status != 2">
+          <el-row v-if="bill.status != 2 && bill.type == 2">
             <el-col class="form-border form-left-bg font-small" :span="6" style="height:100px;line-height:80px">合同照片
             </el-col>
             <!--<el-col class="form-border font-small" :span="18" style="height:100px">
@@ -73,25 +73,7 @@
             </el-row>
           </div>
 
-          <div v-if="bill.status == 5 && bill.redApply">
-            <el-row >
-              <el-col class="form-border form-left-bg font-small" :span="6" >原发票寄送物流公司
-              </el-col>
-              <el-col class="form-border font-small" :span="18">{{bill.originDeliveryCompany}}</el-col>
-            </el-row>
-            <el-row >
-              <el-col class="form-border form-left-bg font-small" :span="6" >合同寄送物流单号
-              </el-col>
-              <el-col class="form-border font-small" :span="18">{{bill.originDeliverySn}}</el-col>
-            </el-row>
-            <el-row >
-              <el-col class="form-border form-left-bg font-small" :span="6" >合同寄送人手机号码
-              </el-col>
-              <el-col class="form-border font-small" :span="18">{{bill.originDeliveryPhone}}</el-col>
-            </el-row>
-          </div>
-
-          <div v-if="bill.status == 1 || bill.status == 6">
+          <div v-if="(bill.status == 1 || bill.status == 6) && (bill.paperType == null || bill.paperType != 1)">
             <el-row >
               <el-col class="form-border form-left-bg font-small" :span="6">发票寄送物流公司
               </el-col>
@@ -157,6 +139,31 @@
             <el-button type="text" size="small" @click="handleViewOrder(bill.orderIds)">查看详情</el-button>
           </el-col>
         </el-row>
+
+        <div v-if="bill.status == 5 && bill.redApply">
+          <div v-if="bill.paperType == null || bill.paperType != 1">
+            <el-row >
+              <el-col class="form-border form-left-bg font-small" :span="6" >原发票寄送物流公司
+              </el-col>
+              <el-col class="form-border font-small" :span="18">{{bill.originDeliveryCompany}}</el-col>
+            </el-row>
+            <el-row >
+              <el-col class="form-border form-left-bg font-small" :span="6" >原发票寄送物流单号
+              </el-col>
+              <el-col class="form-border font-small" :span="18">{{bill.originDeliverySn}}</el-col>
+            </el-row>
+            <el-row >
+              <el-col class="form-border form-left-bg font-small" :span="6" >原发票寄送人手机号码
+              </el-col>
+              <el-col class="form-border font-small" :span="18">{{bill.originDeliveryPhone}}</el-col>
+            </el-row>
+          </div>
+          <el-row >
+            <el-col class="form-border form-left-bg font-small" :span="6" >换开发票原因
+            </el-col>
+            <el-col class="form-border font-small" :span="18">{{bill.redApplyReason}}</el-col>
+          </el-row>
+        </div>
       </div>
     </el-card>
 
@@ -172,7 +179,7 @@
         </el-row>
         <el-row v-if="tempStatus == 0">
           <el-col  class="form-border form-left-bg font-small" style="height: 61px" :span="6">拒绝原因</el-col>
-          <el-col class="form-border font-small" :span="18">
+          <el-col class="form-border font-small" style="height: 61px"  :span="18">
             <el-input v-model="failReason"  style="width: 300px"></el-input>
           </el-col>
         </el-row>
@@ -181,10 +188,68 @@
       </div>
     </el-card>
 
+    <!--换票申请 -->
+    <div class="form-container-border" v-if="bill.status == 5 && bill.redApply">
+      <el-row>
+        <el-col  class="form-border form-left-bg font-small" :span="6">审批操作</el-col>
+        <el-col class="form-border font-small" :span="18">
+          <el-radio v-model="tempStatus"  :label="1">同意</el-radio>
+          <el-radio v-model="tempStatus"  :label="0">拒绝</el-radio>
+        </el-col>
+      </el-row>
+      <el-row v-if="tempStatus == 0">
+        <el-col  class="form-border form-left-bg font-small" style="height: 61px" :span="6">拒绝原因</el-col>
+        <el-col class="form-border font-small"  style="height: 61px"  :span="18">
+          <el-input v-model="failReason"  style="width: 300px"></el-input>
+        </el-col>
+      </el-row>
 
-    <el-card shadow="never" v-if="bill.status == 5" class="standard-margin">
-      <span class="font-title-medium">发票物流信息</span>
+      <div class="form-container-border" v-if="tempStatus == 1">
+        <div v-if="bill.paperType == null || bill.paperType != 1">
+          <el-row>
+            <el-col  class="form-border form-left-bg font-small" style="height: 53px" :span="6">物流公司</el-col>
+            <el-col class="form-border font-small" style="height: 53px"  :span="18">
+              <el-select placeholder="请选择物流公司"
+                         v-model="deliveryCompany"
+                         size="small">
+                <el-option v-for="item in companyOptions"
+                           :key="item"
+                           :label="item"
+                           :value="item">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col  class="form-border form-left-bg font-small" style="height: 61px" :span="6">物流单号</el-col>
+            <el-col class="form-border font-small"  style="height: 61px" :span="18">
+              <el-input v-model="deliverySn"  style="width: 300px"></el-input>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col  class="form-border form-left-bg font-small" style="height: 61px" :span="6">寄件人手机号码</el-col>
+            <el-col class="form-border font-small" style="height: 61px" :span="18">
+              <el-input v-model="deliveryPhone"  style="width: 300px"></el-input>
+            </el-col>
+          </el-row>
+        </div>
+        <el-row>
+          <el-col  class="form-border form-left-bg font-small" style="height: 61px" :span="6">发票号码</el-col>
+          <el-col class="form-border font-small" style="height: 61px" :span="18">
+            <el-input v-model="fphm"  style="width: 400px"></el-input>
+          </el-col>
+        </el-row>
+      </div>
+
+      <el-button type="primary" style="margin-top: 20px;margin-left: 300px" @click="approvalRedApply()">确定</el-button>
+    </div>
+
+    <!--正常开票 -->
+
+    <el-card shadow="never" v-if="bill.status == 5 && !bill.redApply" class="standard-margin">
+      <span class="font-title-medium">发票信息</span>
       <div class="form-container-border">
+        <div v-if="bill.paperType == null || bill.paperType != 1">
         <el-row>
           <el-col  class="form-border form-left-bg font-small" style="height: 53px" :span="6">物流公司</el-col>
           <el-col class="form-border font-small" style="height: 53px"  :span="18">
@@ -211,6 +276,14 @@
             <el-input v-model="deliveryPhone"  style="width: 300px"></el-input>
           </el-col>
         </el-row>
+        </div>
+        <el-row>
+          <el-col  class="form-border form-left-bg font-small" style="height: 61px" :span="6">发票号码</el-col>
+          <el-col class="form-border font-small" style="height: 61px" :span="18">
+            <el-input v-model="fphm"  style="width: 400px"></el-input>
+          </el-col>
+        </el-row>
+
 
         <el-button type="primary" @click="delivery()" style="margin-top: 20px;margin-left: 300px">确定</el-button>
       </div>
@@ -221,7 +294,7 @@
   </div>
 </template>
 <script>
-  import {approval, delivery} from '@/api/bill'
+  import {approval, delivery, redApproval} from '@/api/bill'
   import {formatDate} from '@/utils/date';
   const defaultLogisticsCompanies=["顺丰快递","圆通快递","中通快递","韵达快递"];
 
@@ -239,6 +312,7 @@
          companyOptions:defaultLogisticsCompanies,
          dialogVisible: false,
          dialogImageUrl: null,
+         fphm: null
       }
     },
     created() {
@@ -260,16 +334,30 @@
         } else if (value === 4) {
           return '待合同邮寄';
         } else if (value === 5) {
-          return '待专票邮寄';
+          return '待发票邮寄';
         } else if (value === 6) {
-          return '待确认收到专票';
+          return '待确认收到发票';
         } else {
           return '已拒绝';
         }
       },
       formatType(value) {
-        if (value == 1) return '普票发票'
-        if (value == 2) return '增值税专用票'
+        if (value.type == 1) {
+          if (value.redApply) {
+            return '普票发票(换开)'
+          } else {
+            return '普票发票'
+          }
+
+        }
+
+        if (value.type == 2) {
+          if (value.redApply) {
+            return '增值税专用票(换开)'
+          } else {
+            return '增值税专用票'
+          }
+        }
       },
       formatPaperType(value) {
         if (value == 1) return '电子票'
@@ -331,28 +419,122 @@
           });
         })
       },
+      approvalRedApply() {
+        if (this.tempStatus == 0 && (this.failReason == null || this.failReason == undefined || this.failReason == '')) {
+          this.$message({
+            message: '拒绝时，原因必填',
+            type: 'warning',
+            duration: 1000
+          });
+          return false;
+        }
+        if (this.tempStatus == 1) {
+          if (this.bill.paperType == null || this.bill.paperType != 1) {
+            if (this.deliveryPhone == null || this.deliveryPhone == undefined || this.deliveryPhone == '') {
+              this.$message({
+                message: '发票寄送人手机号码必须填写',
+                type: 'warning',
+                duration: 1000
+              });
+              return false;
+            }
+
+            if (this.deliveryCompany == null || this.deliveryCompany == undefined || this.deliveryCompany == '') {
+              this.$message({
+                message: '发票物流公司必须选择',
+                type: 'warning',
+                duration: 1000
+              });
+              return false;
+            }
+
+            if (this.deliverySn == null || this.deliverySn == undefined || this.deliverySn == '') {
+              this.$message({
+                message: '发票物流单号必须输入',
+                type: 'warning',
+                duration: 1000
+              });
+              return false;
+            }
+
+          }
+
+          if (this.fphm == null || this.fphm == undefined || this.fphm == '') {
+            this.$message({
+              message: '发票号码必须输入',
+              type: 'warning',
+              duration: 1000
+            });
+            return false;
+          }
+        }
+
+        this.$confirm('确定吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let data = {
+            id : this.bill.id,
+            status: this.tempStatus,
+            reason: this.failReason,
+            billDeliveryPhone: this.deliveryPhone,
+            billDeliveryCompany: this.deliveryCompany,
+            billDeliverySn: this.deliverySn,
+            fphm: this.fphm
+          }
+          redApproval(data).then(response=>{
+            if (response.code == 200) {
+              this.$message({
+                message: '操作成功！',
+                type: 'success',
+                duration: 1000
+              });
+              this.$router.push({path:'/oms/billList'})
+            } else {
+              this.$message({
+                message: response.message,
+                type: 'warning',
+                duration: 1000
+              });
+            }
+          });
+        })
+      },
       delivery() {
+        if (this.bill.paperType == null || this.bill.paperType != 1) {
           if (this.deliveryPhone == null || this.deliveryPhone == undefined || this.deliveryPhone == '') {
             this.$message({
-              message: '专票寄送人手机号码必须填写',
+              message: '发票寄送人手机号码必须填写',
               type: 'warning',
               duration: 1000
             });
             return false;
           }
 
-        if (this.deliveryCompany == null || this.deliveryCompany == undefined || this.deliveryCompany == '') {
-          this.$message({
-            message: '专票物流公司必须选择',
-            type: 'warning',
-            duration: 1000
-          });
-          return false;
+          if (this.deliveryCompany == null || this.deliveryCompany == undefined || this.deliveryCompany == '') {
+            this.$message({
+              message: '发票物流公司必须选择',
+              type: 'warning',
+              duration: 1000
+            });
+            return false;
+          }
+
+          if (this.deliverySn == null || this.deliverySn == undefined || this.deliverySn == '') {
+            this.$message({
+              message: '发票物流单号必须输入',
+              type: 'warning',
+              duration: 1000
+            });
+            return false;
+          }
+
         }
 
-        if (this.deliverySn == null || this.deliverySn == undefined || this.deliverySn == '') {
+        if (this.fphm == null || this.fphm == undefined || this.fphm == '') {
           this.$message({
-            message: '专票物流单号必须输入',
+            message: '发票号码必须输入',
             type: 'warning',
             duration: 1000
           });
@@ -368,7 +550,8 @@
               id : this.bill.id,
               billDeliveryPhone: this.deliveryPhone,
               billDeliveryCompany: this.deliveryCompany,
-              billDeliverySn: this.deliverySn
+              billDeliverySn: this.deliverySn,
+              fphm: this.fphm
             }
             delivery(data).then(response=>{
               if (response.code == 200) {

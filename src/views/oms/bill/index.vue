@@ -69,7 +69,7 @@
                 style="width: 100%;"
                 v-loading="listLoading" border>
         <el-table-column label="发票类型" :show-overflow-tooltip="true" min-width="12%" align="center">
-          <template slot-scope="scope">{{scope.row.type | formatType}}</template>
+          <template slot-scope="scope">{{scope.row| formatType}}</template>
         </el-table-column>
         <el-table-column label="提交时间" :show-overflow-tooltip="true" min-width="18%" align="center">
           <template slot-scope="scope">{{scope.row.createdAt | formatCreateTime}}</template>
@@ -187,8 +187,22 @@
         return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
       },
       formatType(value) {
-        if (value == 1) return '普票发票'
-        if (value == 2) return '增值税专用票'
+        if (value.type == 1) {
+          if (value.redApply) {
+            return '普票发票(换开)'
+          } else {
+            return '普票发票'
+          }
+
+        }
+
+        if (value.type == 2) {
+          if (value.redApply) {
+            return '增值税专用票(换开)'
+          } else {
+            return '增值税专用票'
+          }
+        }
       },
       formatName(row) {
         if (row.subType != null && row.subType != undefined && row.subType == 1) {

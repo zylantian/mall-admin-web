@@ -15,6 +15,14 @@ export function approval(data) {
   })
 }
 
+export function redApproval(data) {
+  return request({
+    url: '/bill/red-apply/approval',
+    method: 'put',
+    data: data
+  })
+}
+
 export function delivery(data) {
   return request({
     url: '/bill/delivery',
