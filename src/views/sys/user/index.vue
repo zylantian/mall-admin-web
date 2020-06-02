@@ -259,6 +259,7 @@ export default {
       return this.level < optLevel
     },
     isSonRole(data) {
+      if (this.currentRole == 1 || this.currentRole == 2) return true
       let role = data.roles[0]
       if (role.id == 3 || role.id == 11 || role.id == 7) return false
       let optLevel = role.level

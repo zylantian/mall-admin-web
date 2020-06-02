@@ -19,22 +19,29 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="入库价格" min-width="15%">
+        <el-table-column label="入库价格" min-width="10%">
           <template slot-scope="scope">
             <span>{{scope.row.product.price}}</span>
            <!-- <el-input v-model="scope.row.product.price" type="number" min="1" > </el-input>-->
           </template>
         </el-table-column>
-        <el-table-column label="区域价格" min-width="25%">
+        <el-table-column label="区域价格" min-width="20%">
           <template slot-scope="scope">
             <el-input v-model="scope.row.destPrice" type="number" min="1" > </el-input>
+          </template>
+        </el-table-column>
+        <el-table-column label="税金" min-width="15%">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.taxes" type="number" min="1" >
+              <template slot="append">%</template>
+            </el-input>
           </template>
         </el-table-column>
         <el-table-column label="操作" min-width="25%" align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="add()"
+              @click="addList()"
             >继续添加</el-button>
             <el-button
               size="mini"
@@ -75,7 +82,7 @@
     name: "addProductRegion",
     data() {
       return {
-        list: [{product: {price: null}, destPrice: null}],
+        list: [{product: {price: null}, destPrice: null, taxes: null}],
         productList: [],
         productEmpty: false,
         regionList: [],
@@ -111,8 +118,8 @@
       })
     },
     methods: {
-      add() {
-        this.list.push({product: {price: null}, destPrice: null})
+      addList() {
+        this.list.push({product: {price: null}, destPrice: null, taxes: null})
       },
       del(index) {
         this.list.splice(index, 1)
@@ -155,7 +162,8 @@
           productList.push({
             productId: temp.product.id,
             originPrice: temp.product.price,
-            destPrice: temp.destPrice
+            destPrice: temp.destPrice,
+            taxes: temp.taxes
           })
         })
         if (inputError) {

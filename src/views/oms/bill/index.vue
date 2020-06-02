@@ -94,6 +94,10 @@
             <el-button
               size="mini"
               @click="handleViewOrder(scope.$index, scope.row)"
+              v-if="scope.row.status === 8">开票</el-button>
+            <el-button
+              size="mini"
+              @click="handleViewOrder(scope.$index, scope.row)"
               v-if="scope.row.status === 5">邮寄发票</el-button>
           </template>
         </el-table-column>

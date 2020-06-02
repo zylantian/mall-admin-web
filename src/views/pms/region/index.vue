@@ -59,6 +59,7 @@
         </el-table-column>
           <el-table-column label="入库价格" min-width="15%"  :show-overflow-tooltip="true"  prop="originPrice" align="center"></el-table-column>
           <el-table-column label="销售价格" min-width="15%"  :show-overflow-tooltip="true"  prop="destPrice" align="center"></el-table-column>
+        <el-table-column label="税金比例" min-width="15%"  :show-overflow-tooltip="true"  prop="taxes" align="center"></el-table-column>
 
           <el-table-column label="操作" min-width="14%" align="center">
           <template slot-scope="scope">

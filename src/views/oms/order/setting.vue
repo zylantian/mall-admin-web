@@ -44,6 +44,11 @@
           <template slot="append">元</template>
         </el-input>
       </el-form-item>
+      <el-form-item label="税金：" prop="taxes">
+        <el-input v-model="orderSetting.taxes" class="input-width">
+          <template slot="append">%</template>
+        </el-input>
+      </el-form-item>
         <el-form-item>
         <el-button
           @click="confirm('orderSettingForm')"
