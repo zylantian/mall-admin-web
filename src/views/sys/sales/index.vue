@@ -67,8 +67,8 @@
           <el-input v-model="form.managerPhone" style="width: 370px;" />
         </el-form-item>
         <el-form-item label="类型" >
-          <el-radio  v-model="form.type" v-if="currentDeptType == 1"  :label="2">经销商</el-radio>
-          <el-radio  v-model="form.type" v-if="currentDeptType == 1" :label="3">分仓</el-radio>
+          <el-radio  v-model="form.type"   :label="2">经销商</el-radio>
+          <el-radio  v-model="form.type"  :label="3">分仓</el-radio>
           <el-radio  v-model="form.type" v-if="currentDeptType == -1" :label="4">总仓</el-radio>
         </el-form-item>
         <el-form-item v-if="form.type != 0 && isAdd"  label="区域" :required="true">

@@ -69,6 +69,8 @@
           <el-table-column :show-overflow-tooltip="true" prop="phone" style="width: 15%;" label="电话" />
           <el-table-column :show-overflow-tooltip="true" prop="enterName" style="width: 20%;" label="企业全称" />
           <el-table-column :show-overflow-tooltip="true" prop="enterSn" style="width: 8%;" label="税务识别码"/>
+          <el-table-column :show-overflow-tooltip="true" prop="teamName" style="width: 8%;" label="项目名称"/>
+          <el-table-column :show-overflow-tooltip="true" prop="teamRegion" style="width: 8%;" label="项目地址"/>
           <el-table-column :show-overflow-tooltip="true" prop="salesName" style="width: 12%;" label="供应商名称"/>
           <el-table-column label="状态" width="80" align="center">
             <template slot-scope="scope">

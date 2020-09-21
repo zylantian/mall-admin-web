@@ -7,6 +7,14 @@ export function fetchList(params) {
   })
 }
 
+export function fetchUnrealList(params) {
+  return request({
+    url:'/order/list/unreal',
+    method:'get',
+    params:params
+  })
+}
+
 export function closeOrder(params) {
   return request({
     url:'/order/update/close',

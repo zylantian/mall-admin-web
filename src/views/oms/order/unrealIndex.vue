@@ -23,8 +23,11 @@
           <el-form-item label="输入搜索：">
             <el-input v-model="listQuery.orderSn" class="input-width" placeholder="订单编号"></el-input>
           </el-form-item>
-          <el-form-item label="收货人：">
-            <el-input v-model="listQuery.receiverKeyword" class="input-width" placeholder="收货人姓名/手机号码"></el-input>
+          <el-form-item label="交费联系人：">
+            <el-input v-model="listQuery.receiverKeyword" class="input-width" placeholder="交费联系人姓名/手机号码"></el-input>
+          </el-form-item>
+          <el-form-item label="备注">
+            <el-input v-model="listQuery.note" class="input-width" placeholder="备注"></el-input>
           </el-form-item>
           <el-form-item label="提交时间：">
             <el-date-picker
@@ -76,29 +79,32 @@
                 @selection-change="handleSelectionChange"
                 v-loading="listLoading" border>
         <el-table-column type="selection" min-width="3%" align="center"></el-table-column>
-        <el-table-column label="编号" min-width="5%" align="center">
-          <template slot-scope="scope">{{scope.row.id}}</template>
-        </el-table-column>
         <el-table-column label="订单编号" min-width="17%" align="center">
           <template slot-scope="scope">{{scope.row.orderSn}}</template>
         </el-table-column>
         <el-table-column label="提交时间" min-width="13%" align="center">
           <template slot-scope="scope">{{scope.row.createTime | formatCreateTime}}</template>
         </el-table-column>
-        <el-table-column label="用户账号" min-width="13%">
-          <template slot-scope="scope">{{scope.row.memberUsername}}</template>
-        </el-table-column>
         <el-table-column label="订单金额" min-width="10%" align="center">
           <template slot-scope="scope">￥{{scope.row.payAmount}}</template>
-        </el-table-column>
-        <el-table-column label="支付方式" min-width="10%" align="center">
-          <template slot-scope="scope">{{scope.row.payType | formatPayType}}</template>
         </el-table-column>
         <!--<el-table-column label="订单来源" width="120" align="center">
           <template slot-scope="scope">{{scope.row.sourceType | formatSourceType}}</template>
         </el-table-column>-->
         <el-table-column label="订单状态" min-width="10%" align="center">
           <template slot-scope="scope">{{scope.row.status | formatStatus}}</template>
+        </el-table-column>
+        <el-table-column label="供应商" min-width="10%" align="center">
+          <template slot-scope="scope">{{scope.row.salesName}}</template>
+        </el-table-column>
+        <el-table-column label="交费联系人" min-width="13%">
+          <template slot-scope="scope">{{scope.row.receiverName}}</template>
+        </el-table-column>
+        <el-table-column label="交费联系号码" min-width="13%">
+          <template slot-scope="scope">{{scope.row.receiverPhone}}</template>
+        </el-table-column>
+        <el-table-column label="备注" min-width="13%">
+          <template slot-scope="scope">{{scope.row.note}}</template>
         </el-table-column>
         <el-table-column label="操作" min-width="19%" align="center">
           <template slot-scope="scope">
@@ -183,7 +189,7 @@
   </div>
 </template>
 <script>
-  import {fetchList, closeOrder, deleteOrder, confirmLoan} from '@/api/order'
+  import {fetchUnrealList, closeOrder, deleteOrder, confirmLoan} from '@/api/order'
   import {formatDate} from '@/utils/date';
   import LogisticsDialog from '@/views/oms/order/components/logisticsDialog';
   const defaultListQuery = {
@@ -428,7 +434,7 @@
       },
       getList() {
         this.listLoading = true;
-        fetchList(this.listQuery).then(response => {
+        fetchUnrealList(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.data.list;
           this.total = response.data.total;

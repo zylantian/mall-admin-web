@@ -179,6 +179,13 @@ export const constantRouterMap = [
         hidden: true
       },
       {
+        path: 'unrealOrder',
+        name: 'unrealOrder',
+        component: () => import('@/views/oms/order/unrealIndex'),
+        meta: {title: '虚拟商品订单', icon: 'product-list'},
+        hidden: true
+      },
+      {
         path: 'orderStatistics',
         name: 'orderStatistics',
         component: () => import('@/views/oms/statistics/index'),
