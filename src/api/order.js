@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import qs from 'qs'
 export function fetchList(params) {
   return request({
     url:'/order/list',
@@ -83,5 +84,22 @@ export function viewLogistics(params) {
     url:'/order/logistics',
     method:'get',
     params: params
+  })
+}
+
+
+export function detailDownload(query) {
+  return request({
+    url: '/order/detail-download?' + qs.stringify(query, { indices: false }),
+    method: 'POST',
+    responseType: 'blob'
+  })
+}
+
+export function summaryDownload(query) {
+  return request({
+    url: '/order/summary-download?' + qs.stringify(query, { indices: false }),
+    method: 'POST',
+    responseType: 'blob'
   })
 }

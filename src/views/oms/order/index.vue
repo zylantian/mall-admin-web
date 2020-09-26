@@ -68,6 +68,18 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
+      <el-button
+        class="btn-add"
+        @click="downloadOrderDetail()"
+        size="mini">
+        明细导出
+      </el-button>
+      <el-button
+        class="btn-add"
+        @click="downloadOrderSummary()"
+        size="mini">
+        汇总导出
+      </el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="orderTable"
@@ -76,23 +88,29 @@
                 @selection-change="handleSelectionChange"
                 v-loading="listLoading" border>
         <el-table-column type="selection" min-width="3%" align="center"></el-table-column>
-        <el-table-column label="编号" min-width="5%" align="center">
-          <template slot-scope="scope">{{scope.row.id}}</template>
+        <el-table-column label="订单区域" min-width="8%" align="center">
+          <template slot-scope="scope">{{scope.row.salesName}}</template>
         </el-table-column>
-        <el-table-column label="订单编号" min-width="17%" align="center">
+        <el-table-column label="订单编号" min-width="15%" align="center">
           <template slot-scope="scope">{{scope.row.orderSn}}</template>
         </el-table-column>
-        <el-table-column label="提交时间" min-width="13%" align="center">
+        <el-table-column label="提交时间" min-width="11%" align="center">
           <template slot-scope="scope">{{scope.row.createTime | formatCreateTime}}</template>
         </el-table-column>
-        <el-table-column label="用户账号" min-width="13%">
+        <el-table-column label="收件区域" min-width="13%">
+          <template slot-scope="scope">{{scope.row.receiverProvince}} {{scope.row.receiverCity}} {{scope.row.receiverRegion}}</template>
+        </el-table-column>
+        <el-table-column label="收件地址" min-width="13%">
+          <template slot-scope="scope">{{scope.row.receiverDetailAddress}}</template>
+        </el-table-column>
+        <el-table-column label="用户姓名" min-width="13%">
           <template slot-scope="scope">{{scope.row.memberUsername}}</template>
+        </el-table-column>
+        <el-table-column label="手机号码" min-width="13%">
+          <template slot-scope="scope">{{scope.row.receiverPhone}}</template>
         </el-table-column>
         <el-table-column label="订单金额" min-width="10%" align="center">
           <template slot-scope="scope">￥{{scope.row.payAmount}}</template>
-        </el-table-column>
-        <el-table-column label="支付方式" min-width="10%" align="center">
-          <template slot-scope="scope">{{scope.row.payType | formatPayType}}</template>
         </el-table-column>
         <!--<el-table-column label="订单来源" width="120" align="center">
           <template slot-scope="scope">{{scope.row.sourceType | formatSourceType}}</template>
@@ -100,7 +118,7 @@
         <el-table-column label="订单状态" min-width="10%" align="center">
           <template slot-scope="scope">{{scope.row.status | formatStatus}}</template>
         </el-table-column>
-        <el-table-column label="操作" min-width="19%" align="center">
+        <el-table-column label="操作" min-width="13%" align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -183,9 +201,11 @@
   </div>
 </template>
 <script>
-  import {fetchList, closeOrder, deleteOrder, confirmLoan} from '@/api/order'
+  import {fetchList, closeOrder, deleteOrder, confirmLoan, detailDownload, summaryDownload} from '@/api/order'
   import {formatDate} from '@/utils/date';
   import LogisticsDialog from '@/views/oms/order/components/logisticsDialog';
+  import { downloadFile } from '@/utils/index';
+
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
@@ -313,6 +333,16 @@
       },
     },
     methods: {
+      downloadOrderDetail() {
+        detailDownload(this.listQuery).then(res => {
+          downloadFile(res, '订单明细导出', 'xlsx')
+        })
+      },
+      downloadOrderSummary() {
+        summaryDownload(this.listQuery).then(res => {
+          downloadFile(res, '订单汇总导出', 'xlsx')
+        })
+      },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
       },
