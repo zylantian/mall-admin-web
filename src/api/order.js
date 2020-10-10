@@ -40,6 +40,15 @@ export function deliveryOrder(data) {
   });
 }
 
+export function fetchListNew(params) {
+  return request({
+    url:'/order/list',
+    method:'post',
+    data:params
+  })
+}
+
+
 export function getOrderDetail(id) {
   return request({
     url:'/order/'+id,

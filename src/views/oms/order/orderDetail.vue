@@ -148,7 +148,7 @@
         </el-table-column>
         <el-table-column label="小计" width="120" align="center">
           <template slot-scope="scope">
-            ￥{{scope.row.productPrice*scope.row.productQuantity}}
+            ￥{{(scope.row.productPrice*scope.row.productQuantity).toFixed(2)}}
           </template>
         </el-table-column>
       </el-table>

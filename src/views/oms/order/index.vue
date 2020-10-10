@@ -26,15 +26,7 @@
           <el-form-item label="收货人：">
             <el-input v-model="listQuery.receiverKeyword" class="input-width" placeholder="收货人姓名/手机号码"></el-input>
           </el-form-item>
-          <el-form-item label="提交时间：">
-            <el-date-picker
-              class="input-width"
-              v-model="listQuery.createTime"
-              value-format="yyyy-MM-dd"
-              type="date"
-              placeholder="请选择时间">
-            </el-date-picker>
-          </el-form-item>
+
           <el-form-item label="订单状态：">
             <el-select v-model="listQuery.status" class="input-width" placeholder="全部" clearable>
               <el-option v-for="item in statusOptions"
@@ -43,6 +35,19 @@
                          :value="item.value">
               </el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="提交时间：">
+            <el-date-picker
+              class="input-width"
+              format="yyyy-MM-dd HH:mm:ss"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              range-separator="-"
+              :default-time="['00:00:00','23:59:59']"
+              v-model="listQuery.createTimeList"
+              type="datetimerange"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
           </el-form-item>
          <!-- <el-form-item label="订单分类：">
             <el-select v-model="listQuery.orderType" class="input-width" placeholder="全部" clearable>
@@ -68,7 +73,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button
+      <!--<el-button
         class="btn-add"
         @click="downloadOrderDetail()"
         size="mini">
@@ -79,7 +84,7 @@
         @click="downloadOrderSummary()"
         size="mini">
         汇总导出
-      </el-button>
+      </el-button>-->
     </el-card>
     <div class="table-container">
       <el-table ref="orderTable"
@@ -201,7 +206,7 @@
   </div>
 </template>
 <script>
-  import {fetchList, closeOrder, deleteOrder, confirmLoan, detailDownload, summaryDownload} from '@/api/order'
+  import {fetchListNew, closeOrder, deleteOrder, confirmLoan, detailDownload, summaryDownload} from '@/api/order'
   import {formatDate} from '@/utils/date';
   import LogisticsDialog from '@/views/oms/order/components/logisticsDialog';
   import { downloadFile } from '@/utils/index';
@@ -215,6 +220,7 @@
     orderType: null,
     sourceType: null,
     createTime: null,
+    createTimeList: null
   };
   export default {
     name: "orderList",
@@ -458,7 +464,7 @@
       },
       getList() {
         this.listLoading = true;
-        fetchList(this.listQuery).then(response => {
+        fetchListNew(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.data.list;
           this.total = response.data.total;

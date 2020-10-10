@@ -81,6 +81,9 @@
         <el-table-column label="状态" min-width="12%" align="center">
           <template slot-scope="scope">{{scope.row.status | formatStatus}}</template>
         </el-table-column>
+        <el-table-column label="已开票" min-width="12%" align="center">
+          <template slot-scope="scope">{{scope.row.fphm | formatFphm}}</template>
+        </el-table-column>
         <el-table-column label="操作" min-width="20%" align="center">
           <template slot-scope="scope">
             <el-button
@@ -230,6 +233,13 @@
           return '待确认收到发票';
         } else {
           return '已拒绝'
+        }
+      },
+      formatFphm(value) {
+        if (value == null || value == '') {
+          return "未开票"
+        } else {
+          return "已开票"
         }
       },
     },
