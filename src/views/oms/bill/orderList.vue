@@ -60,7 +60,7 @@
   </div>
 </template>
 <script>
-  import {fetchList, closeOrder, deleteOrder, confirmLoan} from '@/api/order'
+  import {fetchListNew, closeOrder, deleteOrder, confirmLoan} from '@/api/order'
   import {formatDate} from '@/utils/date';
   import LogisticsDialog from '@/views/oms/order/components/logisticsDialog';
   const defaultListQuery = {
@@ -208,7 +208,7 @@
       },
       getList() {
         this.listLoading = true;
-        fetchList(this.listQuery).then(response => {
+        fetchListNew(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.data.list;
           this.total = response.data.total;

@@ -13,7 +13,7 @@
         <!--工具栏-->
         <div class="head-container">
           <!-- 搜索 -->
-          <el-input v-model="query.blurry" clearable size="small" placeholder="输入名称或者邮箱搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
+          <el-input v-model="query.blurry" clearable size="small" placeholder="输入名称或者手机号码搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery" />
           <el-date-picker
             v-model="query.createTime"
             :default-time="['00:00:00','23:59:59']"

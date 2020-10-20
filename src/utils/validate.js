@@ -1,4 +1,4 @@
-export function isvalidUsername(str) {
+validateexport function isvalidUsername(str) {
   // const valid_map = ['admin', 'test']
   return /^[A-Za-z]+$/.test(str)
 }
@@ -41,7 +41,7 @@ export function validEmail(email) {
 }
 
 export function isvalidPhone(phone) {
-  const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
+  const reg = /^1[0-9]{10}$/
   return reg.test(phone)
 }
 
